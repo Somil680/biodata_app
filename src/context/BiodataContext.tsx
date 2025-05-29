@@ -10,7 +10,6 @@ import {
   PartnerPreferences,
   BiodataSettings
 } from '@/lib/type';
-import { calculateAge } from '@/lib/utils';
 // Action Types
 export enum BiodataActionTypes {
   UPDATE_PERSONAL_INFO = 'UPDATE_PERSONAL_INFO',
@@ -111,24 +110,24 @@ export const initialPersonalInfo: PersonalInformation = {
 };
 
 export const initialFamilyInfo: FamilyInformation = {
-  fatherName: '',
-  fatherOccupation: '',
-  motherName: '',
-  motherOccupation: '',
-  brothers: 0,
-  brothersMarried: 0,
-  sisters: 0,
-  sistersMarried: 0,
+  // fatherName: '',
+  // fatherOccupation: '',
+  // motherName: '',
+  // motherOccupation: '',
+  // brothers: 0,
+  // brothersMarried: 0,
+  // sisters: 0,
+  // sistersMarried: 0,
   familyType: '',
   familyValues: '',
   familyStatus: '',
   familyBackground: '',
   aboutFamily: '',
   nativePlace: '',
-  siblings: [],
-  uncles: [],
-  aunts: [],
-  customMembers: [],
+  // siblings: [],
+  // uncles: [],
+  // aunts: [],
+  customMembers: [{id: "1", details: '', relation: 'Dadaji & Dadiji'}, {id: "2", details: '', relation: 'Papaji & Mummyji'}],
 };
 
 export const initialContactInfo: ContactInformation = {
@@ -159,6 +158,7 @@ export const initialSettings: BiodataSettings = {
   idolImage: '',
   tagline: '',
   background: '',
+  profilePhoto: '',
   displayPreferences: [],
   templateId: '1', // Default template
   fontFamily: 'Geist',

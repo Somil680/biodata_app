@@ -7,8 +7,8 @@ import SettingsForm from '../forms/SettingsForm';
 import PreviewSection from './PreviewSection';
 import { Check, ChevronsRight, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { sampleBiodata } from '@/lib/sampleData';
-import { useBiodata, BiodataActionTypes } from '@/context/BiodataContext';
+// import { sampleBiodata } from '@/lib/sampleData';
+// import { useBiodata, BiodataActionTypes } from '@/context/BiodataContext';
 
 // Enum for form steps
 enum BiodataFormStep {
@@ -22,7 +22,7 @@ enum BiodataFormStep {
 // Internal component that has access to the BiodataContext
 const BiodataCreatorInner: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<BiodataFormStep>(BiodataFormStep.PERSONAL_INFO);
-  const { dispatch } = useBiodata();
+  // const { dispatch } = useBiodata();
 
   const goToNextStep = () => {
     setCurrentStep((prev) => Math.min(prev + 1, BiodataFormStep.PREVIEW) as BiodataFormStep);
@@ -36,32 +36,32 @@ const BiodataCreatorInner: React.FC = () => {
     setCurrentStep(step);
   };
 
-  const fillAllFormsWithSampleData = () => {
-    if (dispatch) {
-      // Update all data sections with sample data
-      dispatch({ 
-        type: BiodataActionTypes.UPDATE_PERSONAL_INFO, 
-        payload: sampleBiodata.personalInformation 
-      });
+  // const fillAllFormsWithSampleData = () => {
+  //   if (dispatch) {
+  //     // Update all data sections with sample data
+  //     dispatch({ 
+  //       type: BiodataActionTypes.UPDATE_PERSONAL_INFO, 
+  //       payload: sampleBiodata.personalInformation 
+  //     });
       
-      dispatch({ 
-        type: BiodataActionTypes.UPDATE_FAMILY_INFO, 
-        payload: sampleBiodata.familyInformation 
-      });
+  //     dispatch({ 
+  //       type: BiodataActionTypes.UPDATE_FAMILY_INFO, 
+  //       payload: sampleBiodata.familyInformation 
+  //     });
       
-      dispatch({ 
-        type: BiodataActionTypes.UPDATE_CONTACT_INFO, 
-        payload: sampleBiodata.contactInformation 
-      });
+  //     dispatch({ 
+  //       type: BiodataActionTypes.UPDATE_CONTACT_INFO, 
+  //       payload: sampleBiodata.contactInformation 
+  //     });
       
-      dispatch({ 
-        type: BiodataActionTypes.UPDATE_SETTINGS, 
-        payload: sampleBiodata.settings 
-      });
+  //     dispatch({ 
+  //       type: BiodataActionTypes.UPDATE_SETTINGS, 
+  //       payload: sampleBiodata.settings 
+  //     });
       
-      alert('All forms have been populated with sample data!');
-    }
-  };
+  //     alert('All forms have been populated with sample data!');
+  //   }
+  // };
 
   const steps = [
     {
@@ -127,7 +127,7 @@ const BiodataCreatorInner: React.FC = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto  py-8">
   
 
       {/* Step Progress */}

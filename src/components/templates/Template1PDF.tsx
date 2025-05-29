@@ -1,28 +1,28 @@
-import React from 'react';
-import { Document, Page, Text, View, StyleSheet , Image} from '@react-pdf/renderer';
-import { Biodata } from '@/lib/type';
-import bgImage from '../../../public/images/template-previews/bg.png'; // adjust path
-
+import React, { useRef } from 'react'
+import { StyleSheet } from '@react-pdf/renderer'
+import { Biodata } from '@/lib/type'
+import Image from 'next/image'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 interface TemplateProps {
-  biodata: Biodata;
+  biodata: Biodata
 }
 
 // Helper function to check if a value should be displayed
-const shouldDisplay = (value: any): boolean => {
-  if (value === undefined || value === null || value === '') return false;
-  if (typeof value === 'string') return value.trim().length > 0;
-  if (Array.isArray(value)) return value.length > 0;
-  return true;
-};
+const shouldDisplay = (value: unknown): boolean => {
+  if (value === undefined || value === null || value === '') return false
+  if (typeof value === 'string') return value.trim().length > 0
+  if (Array.isArray(value)) return value.length > 0
+  return true
+}
 
 // Create styles
 const styles = StyleSheet.create({
   page: {
-    padding: 20,
-    backgroundImage: '../../../public/images/template-previews/bg.png',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    border : '1px solid black'
+    // backgroundImage: '../bg.png',
+    // backgroundSize: 'cover',
+    // backgroundPosition: 'center',
+    padding: 10,
   },
   container: {
     display: 'flex',
@@ -40,13 +40,13 @@ const styles = StyleSheet.create({
   imageColumn: {
     position: 'absolute',
     right: 20,
-    top: 64,
-    width: 150,
-    height: 200,
-    border: '2px solid #D40000',
+    top: 34,
+    width: 200,
+    height: 250,
+    // border: '2px solid #D40000',
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
     paddingBottom: 5,
@@ -62,441 +62,521 @@ const styles = StyleSheet.create({
   fieldLabel: {
     width: 150,
     fontWeight: 'medium',
-    color: '#4B5563',
+    // color: '#000',
+    fontSize: 16,
   },
   fieldColon: {
-    width: 10,
+    width: 50,
     fontWeight: 'medium',
-    color: '#4B5563',
+    // color: '#000',
   },
   fieldValue: {
     flex: 1,
-    color: '#111827',
+    // color: '#111827',
+    fontSize: 16,
   },
   sectionContainer: {
     marginBottom: 15,
-  }
-  ,
-   backgroundImage: {
+    position: 'relative',
+  },
+  backgroundImage: {
     position: 'absolute',
-    minWidth: '100%',
-    minHeight: '100%',
-    width: '100%',
-    height: '100%',
     top: 0,
     left: 0,
-    opacity: 0.1, // For watermark effect
+    width: '100%',
+    height: '100%',
+    opacity: 0.1,
+    zIndex: -1,
   },
-});
+})
 
 // The main Template component for PDF
 const Template1PDF: React.FC<TemplateProps> = ({ biodata }) => {
   // Use optional chaining to handle potentially undefined values
-  const personal = biodata?.personalInformation || {};
-  const family = biodata?.familyInformation || {};
-  const contact = biodata?.contactInformation || {};
+  const personal = biodata?.personalInformation || {}
+  const family = biodata?.familyInformation || {}
+  const contact = biodata?.contactInformation || {}
+  const previewRef = useRef<HTMLDivElement>(null)
   
+  const handleDownloadPDF = async () => {
+    console.log("🚀 ~ handleDownloadPDFtt ~ !previewRef.curren:", !previewRef.current)
+    if (!previewRef.current) return
+
+    const canvas = await html2canvas(previewRef.current, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+    })
+
+    const imgData = canvas.toDataURL('image/png')
+    const pdf = new jsPDF('p', 'pt', 'a4')
+    const pdfWidth = pdf.internal.pageSize.getWidth()
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
+    pdf.save('preview.pdf')
+  }
   return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-         <View fixed style={styles.backgroundImage}>
-    <Image src={bgImage} style={styles.backgroundImage} />
-  </View>
-        <View style={styles.container}>
-          {/* Personal Information Section */}
-          <View style={styles.sectionContainer}>
-            <View>
-              
-            <Text style={styles.sectionTitle}>Personal Information</Text>
-            
-            {shouldDisplay(personal.fullName) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Full Name</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.fullName)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.dateOfBirth) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Date of Birth</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.dateOfBirth)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.age) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Age</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.age)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.height) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Height</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.height)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.weight) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Weight</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.weight)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.bloodGroup) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Blood Group</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.bloodGroup)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.maritalStatus) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Marital Status</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.maritalStatus)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.religion) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Religion</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.religion)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.education) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Education</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.education)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.profession) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Profession</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.profession)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.annualIncome) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Annual Income</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.annualIncome)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.timeOfBirth) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Time of Birth</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.timeOfBirth)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.placeOfBirth) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Place of Birth</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.placeOfBirth)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.caste) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Caste</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.caste)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.subCaste) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Sub-Caste</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.subCaste)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.gothra) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Gothra</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.gothra)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.rashi) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Rashi</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.rashi)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.nakshatra) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Nakshatra</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.nakshatra)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.manglik) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Manglik</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.manglik)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.diet) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Diet</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.diet)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.hobbies) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Hobbies</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(Array.isArray(personal.hobbies) ? personal.hobbies.join(', ') : personal.hobbies)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.languages) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Languages</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(Array.isArray(personal.languages) ? personal.languages.join(', ') : personal.languages)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(personal.aboutMe) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>About Me</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(personal.aboutMe)}</Text>
-              </View>
-            )}
-            </View>
-            <View style ={styles.imageColumn}>
+    <>
+      <button
+        onClick={handleDownloadPDF}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        Download PDF
+      </button>
 
-            <Image src={'../../../public/images/template-previews/bg.png'}  />
-            </View>
+      <div ref={previewRef}>
+        <main id="biodata">
+          <section
+            style={styles.page}
+            className={`font-[${biodata.settings.fontFamily}] text-[${biodata.settings.primaryColor}]`}
+          >
+            <section style={styles.container}>
+              <section className="flex flex-col gap-1 items-center justify-center mb-4">
+                <Image
+                  alt="Profile"
+                  width={60}
+                  height={6}
+                  src={biodata.settings.idolImage || ''} // Use the correct path to your image or fallback
+                  // style={styles.imageColumn}
+                />
+                <p className="font-semibold">{biodata.settings.tagline}</p>
+              </section>
 
-            
-          </View>
-          
-          {/* Family Information Section */}
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Family Information</Text>
-            
-            {shouldDisplay(family.fatherName) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Father's Name</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.fatherName)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.fatherOccupation) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Father's Occupation</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.fatherOccupation)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.motherName) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Mother's Name</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.motherName)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.motherOccupation) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Mother's Occupation</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.motherOccupation)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.brothers) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Brothers</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.brothers)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.sisters) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Sisters</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.sisters)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.brothersMarried) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Brothers Married</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.brothersMarried)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.sistersMarried) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Sisters Married</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.sistersMarried)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.familyType) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Family Type</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.familyType)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.familyValues) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Family Values</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.familyValues)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.familyStatus) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Family Status</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.familyStatus)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.nativePlace) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Native Place</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.nativePlace)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(family.aboutFamily) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>About Family</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(family.aboutFamily)}</Text>
-              </View>
-            )}
-            
-            {/* Custom Family Members */}
-            {shouldDisplay(family.customMembers) && 
+              {/* Personal Information Section */}
+              <section style={styles.sectionContainer}>
+                <div>
+                  <p style={styles.sectionTitle}>Personal Information</p>
+
+                  {shouldDisplay(personal.fullName) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Full Name</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.fullName)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.dateOfBirth) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Date of Birth</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.dateOfBirth)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.age) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Age</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>{String(personal.age)}</p>
+                    </div>
+                  )}
+                  {shouldDisplay(personal.timeOfBirth) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Time of Birth</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.timeOfBirth)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.placeOfBirth) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Place of Birth</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.placeOfBirth)}
+                      </p>
+                    </div>
+                  )}
+                  {shouldDisplay(personal.height) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Height</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>{String(personal.height)}</p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.weight) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Weight</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>{String(personal.weight)}</p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.bloodGroup) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Blood Group</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.bloodGroup)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.maritalStatus) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Marital Status</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.maritalStatus)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.religion) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Religion</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.religion)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.education) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Education</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.education)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.profession) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Profession</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.profession)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.annualIncome) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Annual Income</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.annualIncome)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.caste) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Caste</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>{String(personal.caste)}</p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.subCaste) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Sub-Caste</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.subCaste)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.gothra) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Gothra</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>{String(personal.gothra)}</p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.rashi) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Rashi</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>{String(personal.rashi)}</p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.nakshatra) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Nakshatra</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.nakshatra)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.manglik) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Manglik</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.manglik)}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.diet) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Diet</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>{String(personal.diet)}</p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.hobbies) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Hobbies</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(
+                          Array.isArray(personal.hobbies)
+                            ? personal.hobbies.join(', ')
+                            : personal.hobbies
+                        )}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.languages) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>Languages</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(
+                          Array.isArray(personal.languages)
+                            ? personal.languages.join(', ')
+                            : personal.languages
+                        )}
+                      </p>
+                    </div>
+                  )}
+
+                  {shouldDisplay(personal.aboutMe) && (
+                    <div style={styles.fieldContainer}>
+                      <p style={styles.fieldLabel}>About Me</p>
+                      <p style={styles.fieldColon}>:</p>
+                      <p style={styles.fieldValue}>
+                        {String(personal.aboutMe)}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div style={styles.imageColumn}>
+                  <Image
+                    alt="Profile"
+                    width={200}
+                    height={250}
+                    src={biodata.settings.profilePhoto || ''} // Use the correct path to your image or fallback
+                    // style={styles.imageColumn}
+                  />
+                </div>
+              </section>
+
+              {/* Family Information Section */}
+              <section style={styles.sectionContainer}>
+                <p style={styles.sectionTitle}>Family Information</p>
+
+                {shouldDisplay(family.familyType) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Family Type</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(family.familyType)}</p>
+                  </div>
+                )}
+
+                {shouldDisplay(family.familyValues) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Family Values</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
+                      {String(family.familyValues)}
+                    </p>
+                  </div>
+                )}
+
+                {shouldDisplay(family.familyStatus) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Family Status</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
+                      {String(family.familyStatus)}
+                    </p>
+                  </div>
+                )}
+
+                {shouldDisplay(family.nativePlace) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Native Place</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
+                      {String(family.nativePlace)}
+                    </p>
+                  </div>
+                )}
+
+                {shouldDisplay(family.aboutFamily) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>About Family</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
+                      {String(family.aboutFamily)}
+                    </p>
+                  </div>
+                )}
+
+                {/* Custom Family Members */}
+
+                {/* {shouldDisplay(family.customMembers) && 
+                family.customMembers?.map((member, index) => (
+                  <div key={member.id} className={fieldStyles.container}>
+                    <span className={fieldStyles.label}>{member.relation}</span>
+                    <span className={fieldStyles.colon}>:</span>
+                    <span className={fieldStyles.value}>
+                      {member.details.split('\n').map((line, i) => (
+                        line ? (
+                          <React.Fragment key={i}>
+                            {line}
+                            {i < member.details.split('\n').length - 1 && <br />}
+                          </React.Fragment>
+                        ) : null
+                      ))}
+                    </span>
+                  </div>
+                ))} */}
+
+                {shouldDisplay(family.customMembers) &&
+                  family.customMembers?.map((member, index) => {
+                    if (!member || !member.relation || !member.details)
+                      return null
+                    return (
+                      <div
+                        key={`${member.id || index}-${index}`}
+                        style={styles.fieldContainer}
+                      >
+                        <p style={styles.fieldLabel}>
+                          {String(member.relation)}
+                        </p>
+                        <p style={styles.fieldColon}>:</p>
+                        <div style={styles.fieldValue}>
+                          {member.details
+                            .split('\n')
+                            .map((line, lineIndex) =>
+                              line.trim() ? <p key={lineIndex}>{line}</p> : null
+                            )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                {/* {shouldDisplay(family.customMembers) && 
               family.customMembers?.map((member, index) => {
                 if (!member || !member.relation || !member.details) return null;
                 return (
-                  <View key={`${member.id || index}-${index}`} style={styles.fieldContainer}>
-                    <Text style={styles.fieldLabel}>{String(member.relation)}</Text>
-                    <Text style={styles.fieldColon}>:</Text>
-                    <Text style={styles.fieldValue}>
-                      {String(member.details || "").split('\n').join(' ')}
-                    </Text>
-                  </View>
+                  <div key={`${member.id || index}-${index}`} style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>{String(member.relation)}</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
+                    {member.details.split('\n').map((line, i) => (
+                        line ? (
+                          <p key={i}>
+                            {line}
+                            {i < member.details.split('\n').length - 1 && <br />}
+                          </p>
+                        ) : null
+                      ))}
+                    </p>
+                  </div>
                 );
-              })}
-          </View>
-          
-          {/* Contact Information Section */}
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Contact Information</Text>
-            
-            {shouldDisplay(contact.mobileNumber) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Mobile Number</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(contact.mobileNumber)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(contact.alternateNumber) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Alternate Number</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(contact.alternateNumber)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(contact.email) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Email</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(contact.email)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(contact.address) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Address</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(contact.address)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(contact.city) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>City</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(contact.city)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(contact.state) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>State</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(contact.state)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(contact.country) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Country</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(contact.country)}</Text>
-              </View>
-            )}
-            
-            {shouldDisplay(contact.pincode) && (
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Pincode</Text>
-                <Text style={styles.fieldColon}>:</Text>
-                <Text style={styles.fieldValue}>{String(contact.pincode)}</Text>
-              </View>
-            )}
-          </View>
-        </View>
-      </Page>
-    </Document>
-  );
-};
+              })} */}
+              </section>
 
-export default Template1PDF; 
+              {/* Contact Information Section */}
+              <section style={styles.sectionContainer}>
+                <p style={styles.sectionTitle}>Contact Information</p>
+
+                {shouldDisplay(contact.mobileNumber) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Mobile Number</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
+                      {String(contact.mobileNumber)}
+                    </p>
+                  </div>
+                )}
+
+                {shouldDisplay(contact.alternateNumber) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Alternate Number</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
+                      {String(contact.alternateNumber)}
+                    </p>
+                  </div>
+                )}
+
+                {shouldDisplay(contact.email) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Email</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(contact.email)}</p>
+                  </div>
+                )}
+
+                {shouldDisplay(contact.address) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Address</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(contact.address)}</p>
+                  </div>
+                )}
+
+                {shouldDisplay(contact.city) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>City</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(contact.city)}</p>
+                  </div>
+                )}
+
+                {shouldDisplay(contact.state) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>State</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(contact.state)}</p>
+                  </div>
+                )}
+
+                {shouldDisplay(contact.country) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Country</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(contact.country)}</p>
+                  </div>
+                )}
+
+                {shouldDisplay(contact.pincode) && (
+                  <div style={styles.fieldContainer}>
+                    <p style={styles.fieldLabel}>Pincode</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(contact.pincode)}</p>
+                  </div>
+                )}
+              </section>
+            </section>
+          </section>
+        </main>
+      </div>
+    </>
+  )
+}
+
+export default Template1PDF

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import InputField from '@/components/ui/InputField';
 import SelectField from '@/components/ui/SelectField';
 import { useFamilyInfoForm } from '@/hooks/useBiodataForm';
-import { User, Briefcase, GraduationCap, Users, Home, Map, Heart, Plus, X } from 'lucide-react';
+import { User, Users, Home, Map, Heart, Plus, X } from 'lucide-react';
 import { sampleBiodata } from '@/lib/sampleData';
 
 const familyTypeOptions = [
@@ -25,70 +25,70 @@ const familyStatusOptions = [
 ];
 
 // Component for family member input
-const FamilyMemberInput: React.FC<{
-  index: number;
-  type: string;
-  member: { name: string; occupation?: string; education?: string; age?: number };
-  onUpdate: (index: number, field: string, value: string | number) => void;
-  onRemove: (index: number) => void;
-}> = ({ index, type, member, onUpdate, onRemove }) => {
-  return (
-    <div className="p-4 border border-gray-200 rounded-md space-y-4">
-      <div className="flex justify-between items-center">
-        <h4 className="font-medium text-gray-700 capitalize">{type} {index + 1}</h4>
-        <button
-          type="button"
-          className="text-red-500 text-sm"
-          onClick={() => onRemove(index)}
-        >
-          Remove
-        </button>
-      </div>
+// const FamilyMemberInput: React.FC<{
+//   index: number;
+//   type: string;
+//   member: { name: string; occupation?: string; education?: string; age?: number };
+//   onUpdate: (index: number, field: string, value: string | number) => void;
+//   onRemove: (index: number) => void;
+// }> = ({ index, type, member, onUpdate, onRemove }) => {
+//   return (
+//     <div className="p-4 border border-gray-200 rounded-md space-y-4">
+//       <div className="flex justify-between items-center">
+//         <h4 className="font-medium text-gray-700 capitalize">{type} {index + 1}</h4>
+//         <button
+//           type="button"
+//           className="text-red-500 text-sm"
+//           onClick={() => onRemove(index)}
+//         >
+//           Remove
+//         </button>
+//       </div>
       
-      <InputField
-        id={`${type}_${index}_name`}
-        name={`${type}_${index}_name`}
-        label="Name"
-        placeholder="Enter name"
-        value={member.name}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate(index, 'name', e.target.value)}
-        required
-        icon={<User className="h-5 w-5 text-gray-400" />}
-      />
+//       <InputField
+//         id={`${type}_${index}_name`}
+//         name={`${type}_${index}_name`}
+//         label="Name"
+//         placeholder="Enter name"
+//         value={member.name}
+//         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate(index, 'name', e.target.value)}
+//         required
+//         icon={<User className="h-5 w-5 text-gray-400" />}
+//       />
       
-      <InputField
-        id={`${type}_${index}_occupation`}
-        name={`${type}_${index}_occupation`}
-        label="Occupation"
-        placeholder="Enter occupation"
-        value={member.occupation || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate(index, 'occupation', e.target.value)}
-        icon={<Briefcase className="h-5 w-5 text-gray-400" />}
-      />
+//       <InputField
+//         id={`${type}_${index}_occupation`}
+//         name={`${type}_${index}_occupation`}
+//         label="Occupation"
+//         placeholder="Enter occupation"
+//         value={member.occupation || ''}
+//         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate(index, 'occupation', e.target.value)}
+//         icon={<Briefcase className="h-5 w-5 text-gray-400" />}
+//       />
       
-      <InputField
-        id={`${type}_${index}_education`}
-        name={`${type}_${index}_education`}
-        label="Education"
-        placeholder="Enter education"
-        value={member.education || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate(index, 'education', e.target.value)}
-        icon={<GraduationCap className="h-5 w-5 text-gray-400" />}
-      />
+//       <InputField
+//         id={`${type}_${index}_education`}
+//         name={`${type}_${index}_education`}
+//         label="Education"
+//         placeholder="Enter education"
+//         value={member.education || ''}
+//         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate(index, 'education', e.target.value)}
+//         icon={<GraduationCap className="h-5 w-5 text-gray-400" />}
+//       />
       
-      <InputField
-        id={`${type}_${index}_age`}
-        name={`${type}_${index}_age`}
-        type="number"
-        label="Age"
-        placeholder="Enter age"
-        value={member.age?.toString() || ''}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate(index, 'age', parseInt(e.target.value) || 0)}
-        icon={<User className="h-5 w-5 text-gray-400" />}
-      />
-    </div>
-  );
-};
+//       <InputField
+//         id={`${type}_${index}_age`}
+//         name={`${type}_${index}_age`}
+//         type="number"
+//         label="Age"
+//         placeholder="Enter age"
+//         value={member.age?.toString() || ''}
+//         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onUpdate(index, 'age', parseInt(e.target.value) || 0)}
+//         icon={<User className="h-5 w-5 text-gray-400" />}
+//       />
+//     </div>
+//   );
+// };
 
 // Component for custom family member input
 interface CustomFamilyMember {
@@ -103,24 +103,24 @@ const CustomFamilyMemberInput: React.FC<{
   onRemove: () => void;
 }> = ({ member, onUpdate, onRemove }) => {
   return (
-    <div className="p-4 border border-gray-200 rounded-md bg-orange-50/30">
-      <div className="flex justify-between items-center mb-4">
-        <h4 className="font-medium text-gray-700">Custom Family Member</h4>
+    <div className="p-2 border border-gray-200 rounded-md bg-orange-50/30 relative">
+      <div className="absolute top-1 right-1">
+        {/* <h4 className="font-medium text-gray-700">Family Member</h4> */}
         <button
           type="button"
-          className="text-red-500 hover:bg-red-50 p-1 rounded-full"
+          className="text-red-500 hover:bg-red-50 p-1 rounded-full "
           onClick={onRemove}
         >
           <X className="h-4 w-4" />
         </button>
       </div>
       
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-2">
         <InputField
           id={`relation_${member.id}`}
           name={`relation_${member.id}`}
           label="Relationship"
-          placeholder="e.g., Grandfather, Nana, Fufa"
+          placeholder="e.g., Grandfather&GrandMother, NanaJi&NaniJi , Fufaji&Buaji, etc."
           value={member.relation}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
             onUpdate({ ...member, relation: e.target.value })}
@@ -154,12 +154,12 @@ const CustomFamilyMemberInput: React.FC<{
 };
 
 interface FamilyInfoFormProps {
-  initialValues?: any;
-  onSubmit?: (values: any) => void;
+  initialValues?: unknown;
+  onSubmit?: (values: unknown) => void;
   onNext?: () => void;
 }
 
-const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit, onNext }) => {
+const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({  onSubmit, onNext }) => {
   const { familyInfo, updateFamilyInfo } = useFamilyInfoForm();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [customMembers, setCustomMembers] = useState<CustomFamilyMember[]>(
@@ -201,29 +201,29 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit
     }
   };
 
-  const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const numValue = value === '' ? 0 : parseInt(value);
-    updateFamilyInfo({ [name]: numValue });
-  };
+  // const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   const numValue = value === '' ? 0 : parseInt(value);
+  //   updateFamilyInfo({ [name]: numValue });
+  // };
 
-  // Add/update/remove family members
-  const updateFamilyMember = (type: 'siblings' | 'uncles' | 'aunts') => (index: number, field: string, value: string | number) => {
-    const members = [...(familyInfo[type] || [])];
-    members[index] = { ...members[index], [field]: value };
-    updateFamilyInfo({ [type]: members });
-  };
+  // // Add/update/remove family members
+  // const updateFamilyMember = (type: 'siblings' | 'uncles' | 'aunts') => (index: number, field: string, value: string | number) => {
+  //   const members = [...(familyInfo[type] || [])];
+  //   members[index] = { ...members[index], [field]: value };
+  //   updateFamilyInfo({ [type]: members });
+  // };
 
-  const addFamilyMember = (type: 'siblings' | 'uncles' | 'aunts') => () => {
-    const members = [...(familyInfo[type] || []), { name: '' }];
-    updateFamilyInfo({ [type]: members });
-  };
+  // const addFamilyMember = (type: 'siblings' | 'uncles' | 'aunts') => () => {
+  //   const members = [...(familyInfo[type] || []), { name: '' }];
+  //   updateFamilyInfo({ [type]: members });
+  // };
 
-  const removeFamilyMember = (type: 'siblings' | 'uncles' | 'aunts') => (index: number) => {
-    const members = [...(familyInfo[type] || [])];
-    members.splice(index, 1);
-    updateFamilyInfo({ [type]: members });
-  };
+  // const removeFamilyMember = (type: 'siblings' | 'uncles' | 'aunts') => (index: number) => {
+  //   const members = [...(familyInfo[type] || [])];
+  //   members.splice(index, 1);
+  //   updateFamilyInfo({ [type]: members });
+  // };
 
   // Handle custom family members
   const addCustomMember = () => {
@@ -255,14 +255,14 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit
     e.preventDefault();
     
     // Validate required fields
-    const requiredFields = ['fatherName', 'motherName'];
+    // const requiredFields = ['fatherName', 'motherName'];
     const newErrors: Record<string, string> = {};
     
-    requiredFields.forEach(field => {
-      if (!familyInfo[field as keyof typeof familyInfo]) {
-        newErrors[field] = 'This field is required';
-      }
-    });
+    // requiredFields.forEach(field => {
+    //   if (!familyInfo[field as keyof typeof familyInfo]) {
+    //     newErrors[field] = 'This field is required';
+    //   }
+    // });
     
     if (Object.keys(newErrors).length === 0) {
       // Proceed to the next step if validation passes
@@ -292,7 +292,7 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-        <InputField
+        {/* <InputField
           id="fatherName"
           name="fatherName"
           label="Father's Name"
@@ -336,9 +336,9 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit
           onChange={handleInputChange}
           icon={<Briefcase className="h-5 w-5 text-gray-400" />}
           error={errors.motherOccupation}
-        />
+        /> */}
         
-        <div className="flex space-x-4">
+        {/* <div className="flex space-x-4">
           <InputField
             id="brothers"
             name="brothers"
@@ -362,9 +362,9 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit
             max={familyInfo.brothers || 0}
             containerClassName="flex-1"
           />
-        </div>
+        </div> */}
         
-        <div className="flex space-x-4">
+        {/* <div className="flex space-x-4">
           <InputField
             id="sisters"
             name="sisters"
@@ -388,7 +388,7 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit
             max={familyInfo.sisters || 0}
             containerClassName="flex-1"
           />
-        </div>
+        </div> */}
         
         <SelectField
           id="familyType"
@@ -436,7 +436,7 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit
       </div>
       
       {/* Siblings Section */}
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-medium">Siblings</h3>
           <button
@@ -464,14 +464,14 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit
             <p className="text-gray-500 text-sm">No siblings added</p>
           )}
         </div>
-      </div>
+      </div> */}
       
       {/* Custom Family Members Section */}
       <div className="mt-8 border-t border-dashed border-gray-300 pt-6">
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h3 className="text-lg font-medium">Additional Family Members</h3>
-            <p className="text-sm text-gray-500">Add other family members like grandfather, nana, fufa, etc.</p>
+            <h3 className="text-lg font-medium"> Family Members</h3>
+            {/* <p className="text-sm text-gray-500">Add other family members like grandfather, nana, fufa, etc.</p> */}
           </div>
           <button
             type="button"
@@ -479,7 +479,7 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({ initialValues, onSubmit
             onClick={addCustomMember}
           >
             <Plus className="h-4 w-4 mr-1" />
-            Add Member
+            Add Field
           </button>
         </div>
         

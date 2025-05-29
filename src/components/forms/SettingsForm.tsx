@@ -1,9 +1,16 @@
 // src/components/forms/SettingsForm.tsx
-import React, { useState, useRef } from 'react';
-import InputField from '@/components/ui/InputField';
-import { useBiodataSettings } from '@/hooks/useBiodataForm';
-import { Image, Type, Share, Lock, Plus } from 'lucide-react';
-import { sampleBiodata } from '@/lib/sampleData';
+import React, { useState, useRef } from 'react'
+import InputField from '@/components/ui/InputField'
+import { useBiodataSettings } from '@/hooks/useBiodataForm'
+import { Image as Img, Type, Share, Lock, Plus } from 'lucide-react'
+import { sampleBiodata } from '@/lib/sampleData'
+import Image from 'next/image'
+import img1 from '../../../public/images/idols/ganesha.png'
+import img2 from '../../../public/images/idols/om (1).png'
+import img3 from '../../../public/images/idols/om (2).png'
+import img4 from '../../../public/images/idols/om.png'
+import img5 from '../../../public/images/idols/christian.png'
+import img6 from '../../../public/images/idols/light.png'
 
 // Sample template options
 const templates = [
@@ -11,137 +18,122 @@ const templates = [
     id: '1',
     name: 'Classic',
     thumbnail: '/templates/classic.jpg',
-    description: 'A traditional layout with elegant styling'
+    description: 'A traditional layout with elegant styling',
   },
   {
     id: '2',
     name: 'Modern',
     thumbnail: '/templates/modern.jpg',
-    description: 'Clean and minimal design with contemporary styling'
+    description: 'Clean and minimal design with contemporary styling',
   },
   {
     id: '3',
     name: 'Professional',
     thumbnail: '/templates/professional.jpg',
-    description: 'Formal design ideal for career-focused individuals'
+    description: 'Formal design ideal for career-focused individuals',
   },
   {
     id: '4',
     name: 'Elegant',
     thumbnail: '/templates/elegant.jpg',
-    description: 'Sophisticated layout with decorative elements'
-  }
-];
+    description: 'Sophisticated layout with decorative elements',
+  },
+]
 
 // Sample font options
-const fontOptions = [
-  { value: 'geist', label: 'Geist Sans (Default)' },
-  { value: 'poppins', label: 'Poppins' },
-  { value: 'roboto', label: 'Roboto' },
-  { value: 'playfair', label: 'Playfair Display' },
-  { value: 'merriweather', label: 'Merriweather' },
-];
 
-// Sample color options
-const colorOptions = [
-  { value: '#D40000', label: 'Red (Default)' },
-  { value: '#1E40AF', label: 'Blue' },
-  { value: '#047857', label: 'Green' },
-  { value: '#7E22CE', label: 'Purple' },
-  { value: '#B45309', label: 'Orange' },
-  { value: '#1F2937', label: 'Dark Gray' },
-];
 
 interface SettingsFormProps {
-  initialValues?: any;
-  onSubmit?: (values: any) => void;
-  onNext?: () => void;
+  initialValues?: unknown
+  onSubmit?: (values: unknown) => void
+  onNext?: () => void
 }
 
-const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, onNext }) => {
-    const { settings, updateSettings,
-        // uploadPhoto
-    } = useBiodataSettings();
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  
+const SettingsForm: React.FC<SettingsFormProps> = ({ onSubmit, onNext }) => {
+  const {
+    settings,
+    updateSettings,
+    // uploadPhoto
+  } = useBiodataSettings()
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
   // For file uploads
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const idolFileInputRef = useRef<HTMLInputElement>(null);
-  
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const idolFileInputRef = useRef<HTMLInputElement>(null)
+
   // Function to populate form with sample data
   const fillWithSampleData = () => {
-    const sampleData = sampleBiodata.settings;
-    updateSettings(sampleData);
-    setErrors({});
-  };
+    const sampleData = sampleBiodata.settings
+    updateSettings(sampleData)
+    setErrors({})
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    updateSettings({ [name]: value });
-    
+    const { name, value } = e.target
+    updateSettings({ [name]: value })
+
     // Clear errors when user starts typing
     if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
+      setErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[name]
+        return newErrors
+      })
     }
-  };
+  }
 
-  const handleSelectTemplate = (templateId: string) => {
-    updateSettings({ templateId });
-  };
 
-  const handleFontChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateSettings({ fontFamily: e.target.value });
-  };
 
-  const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateSettings({ primaryColor: e.target.value });
-  };
 
-  const handleShareEnableToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateSettings({ shareEnabled: e.target.checked });
-  };
 
   const handleUploadIdolImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
       // In a real app, you would upload this file to your server/cloud storage
       // Here we're creating a local object URL
-      const imageUrl = URL.createObjectURL(file);
-      updateSettings({ idolImage: imageUrl });
+      const imageUrl = URL.createObjectURL(file)
+      updateSettings({ idolImage: imageUrl })
     }
-  };
+  }
 
-  const handleBackgroundChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleProfilePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (file) {
       // In a real app, you would upload this file to your server/cloud storage
       // Here we're creating a local object URL
-      const imageUrl = URL.createObjectURL(file);
-      updateSettings({ background: imageUrl });
+      const imageUrl = URL.createObjectURL(file)
+      updateSettings({ profilePhoto: imageUrl })
     }
-  };
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+    e.preventDefault()
+
     // Save settings
-    console.log('Settings saved');
+    console.log('Settings saved')
     if (onSubmit) {
-      onSubmit(settings);
+      onSubmit(settings)
     }
     if (onNext) {
-      onNext();
+      onNext()
     }
-  };
+  }
 
+  const idolImageArray = [img1, img2, img3, img4, img5, img6]
+  const taglineArray = [
+    'ॐ श्री गणेशाय नमः:',
+    'BIODATA',
+    'ॐ नमः शिवाय',
+    'ॐ जय श्री कृष्णा',
+    'ॐ जय माता दी',
+    'ॐ जय साईं राम',
+    'ॐ जय हनुमान जी की',
+    'ॐ जय गुरुदेव',
+  ]
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Biodata Appearance Settings</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Biodata Appearance</h2>
         <button
           type="button"
           onClick={fillWithSampleData}
@@ -155,40 +147,63 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, on
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Idol Image</h3>
         <p className="text-sm text-gray-500">
-          Add an image of your deity or religious symbol that will appear at the top of your biodata.
+          Add an image of your deity or religious symbol that will appear at the
+          top of your biodata.
         </p>
-        
-        <div className="flex items-center space-x-4">
-          <div 
-            className="w-20 h-20 border border-dashed border-gray-300 rounded-md flex items-center justify-center bg-gray-50 overflow-hidden"
-            onClick={() => idolFileInputRef.current?.click()}
-          >
-            {settings.idolImage ? (
-              <img 
-                src={settings.idolImage} 
-                alt="Idol" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <Plus className="h-6 w-6 text-gray-400" />
-            )}
+
+        <div className="flex flex-col  space-y-4">
+          <div className="flex items-center space-x-4">
+            <div
+              className="w-20 h-20 border border-dashed border-gray-300 rounded-md flex items-center justify-center bg-gray-50 overflow-hidden"
+              onClick={() => idolFileInputRef.current?.click()}
+            >
+              {settings.idolImage ? (
+                <Image
+                  src={settings.idolImage}
+                  width={80}
+                  height={80}
+                  alt="Idol"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Plus className="h-6 w-6 text-gray-400" />
+              )}
+            </div>
+
+            <button
+              type="button"
+              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm"
+              onClick={() => idolFileInputRef.current?.click()}
+            >
+              {settings.idolImage ? 'Change Idol Image' : 'Upload Idol Image'}
+            </button>
+
+            <input
+              type="file"
+              ref={idolFileInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleUploadIdolImage}
+            />
           </div>
-          
-          <button
-            type="button"
-            className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm"
-            onClick={() => idolFileInputRef.current?.click()}
-          >
-            {settings.idolImage ? 'Change Idol Image' : 'Upload Idol Image'}
-          </button>
-          
-          <input
-            type="file"
-            ref={idolFileInputRef}
-            className="hidden"
-            accept="image/*"
-            onChange={handleUploadIdolImage}
-          />
+
+          <div className=" flex items-center gap-4 p-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+            {idolImageArray.map((img, index) => (
+              <button
+                key={index}
+                onClick={() => updateSettings({ idolImage: img.src })}
+                className="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <Image
+                  src={img}
+                  width={40}
+                  height={40}
+                  alt="Idol"
+                  className=" object-contain hover:scale-110 transition-transform duration-200"
+                />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -198,7 +213,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, on
         <p className="text-sm text-gray-500">
           Add a short tagline that will appear at the top of your biodata.
         </p>
-        
+
         <InputField
           id="tagline"
           name="tagline"
@@ -208,51 +223,62 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, on
           icon={<Type className="h-5 w-5 text-gray-400" />}
           error={errors.tagline}
         />
+        <div className=" flex flex-wrap items-center gap-2 ">
+          {taglineArray.map((tag, index) => (
+            <button
+              key={index}
+              onClick={() => updateSettings({ tagline: tag })}
+              className="flex items-center justify-center w-fit text-xs border p-2  hover:bg-gray-100 transition-colors bg-[#fffbf5] rounded-full"
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Background Image Section */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium">Background Image</h3>
-        <p className="text-sm text-gray-500">
-          Add a subtle background image to your biodata (optional).
-        </p>
-        
-        <div className="flex items-center space-x-4">
-          <div 
-            className="w-32 h-20 border border-dashed border-gray-300 rounded-md flex items-center justify-center bg-gray-50 overflow-hidden"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            {settings.background ? (
-              <img 
-                src={settings.background} 
-                alt="Background" 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <Image className="h-6 w-6 text-gray-400" />
-            )}
-          </div>
-          
+        <h3 className="text-lg font-medium">Profile Image</h3>
+
+        <div className="flex flex-col space-y-4 ">
           <button
             type="button"
-            className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm"
+            className="px-4 w-fit py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm"
             onClick={() => fileInputRef.current?.click()}
           >
-            {settings.background ? 'Change Background' : 'Upload Background'}
+            {settings.profilePhoto
+              ? 'Change Profile Image'
+              : 'Upload Profile Image'}
           </button>
-          
+          <div
+            className="w-40 h-52 border border-dashed border-gray-300 rounded-md flex items-center justify-center bg-gray-50 overflow-hidden"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {settings.profilePhoto ? (
+              <Image
+                src={settings.profilePhoto}
+                alt="Background"
+                className="w-full h-full object-cover"
+                width={300}
+                height={300}
+              />
+            ) : (
+              <Img className="h-6 w-6 text-gray-400" />
+            )}
+          </div>
+
           <input
             type="file"
             ref={fileInputRef}
             className="hidden"
             accept="image/*"
-            onChange={handleBackgroundChange}
+            onChange={handleProfilePhotoChange}
           />
         </div>
       </div>
 
       {/* Template Selection */}
-      <div className="space-y-4">
+      {/* <div className="space-y-4">
         <h3 className="text-lg font-medium">Select Template</h3>
         <p className="text-sm text-gray-500">
           Choose a design template for your biodata.
@@ -270,7 +296,6 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, on
               onClick={() => handleSelectTemplate(template.id)}
             >
               <div className="h-32 bg-gray-100 relative">
-                {/* In a real app, you would have actual template thumbnails */}
                 <div className="absolute inset-0 flex items-center justify-center text-gray-400">
                   {template.name} Preview
                 </div>
@@ -282,10 +307,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, on
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Font and Color Selection */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <h3 className="text-lg font-medium">Font Family</h3>
           <p className="text-sm text-gray-500">
@@ -349,10 +374,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, on
             <span className="text-sm">{settings.primaryColor}</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Sharing Options */}
-      <div className="space-y-4">
+      {/* <div className="space-y-4">
         <h3 className="text-lg font-medium">Sharing Options</h3>
         
         <div className="flex items-center space-x-2">
@@ -434,7 +459,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, on
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Buttons */}
       <div className="flex space-x-4">
@@ -443,12 +468,12 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, on
           className="px-6 py-2 border border-[#D40000] text-[#D40000] rounded-md hover:bg-[#D40000]/10 transition-colors"
           onClick={() => {
             // Go back to previous step
-            console.log('Go back to previous step');
+            console.log('Go back to previous step')
           }}
         >
           Back
         </button>
-        
+
         <button
           type="button"
           className="px-6 py-2 bg-[#D40000] text-white rounded-md hover:bg-[#b30000] transition-colors"
@@ -458,7 +483,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ initialValues, onSubmit, on
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SettingsForm;
+export default SettingsForm

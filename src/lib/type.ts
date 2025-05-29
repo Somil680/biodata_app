@@ -46,31 +46,31 @@ export interface CustomFamilyMember {
 }
 
 export interface FamilyInformation {
-    fatherName: string;
-    fatherOccupation?: string;
-    motherName: string;
-    motherOccupation?: string;
-    brothers?: number;
-    brothersMarried?: number;
-    sisters?: number;
-    sistersMarried?: number;
-    brotherName?: string;
-    sisterName?: string;
+    // fatherName: string;
+    // fatherOccupation?: string;
+    // motherName: string;
+    // motherOccupation?: string;
+    // brothers?: number;
+    // brothersMarried?: number;
+    // sisters?: number;
+    // sistersMarried?: number;
+    // brotherName?: string;
+    // sisterName?: string;
     familyType?: string;
     familyValues?: string;
     familyStatus?: string;
     familyBackground?: string;
     nativePlace?: string;
     aboutFamily?: string;
-    dada?: string;
-    tauji?: string;
-    nanaji?: string;
-    fufa?: string;
-    mama?: string;
-    chacha?: string;
-    siblings?: FamilyMember[];
-    uncles?: FamilyMember[];
-    aunts?: FamilyMember[];
+    // dada?: string;
+    // tauji?: string;
+    // nanaji?: string;
+    // fufa?: string;
+    // mama?: string;
+    // chacha?: string;
+    // siblings?: FamilyMember[];
+    // uncles?: FamilyMember[];
+    // aunts?: FamilyMember[];
     customMembers?: CustomFamilyMember[];
 }
 
@@ -107,6 +107,7 @@ export interface BiodataSettings {
     idolImage?: string;
     tagline?: string;
     background?: string;
+    profilePhoto?: string;
     displayPreferences?: string[];
     templateId?: string;
     fontFamily?: string;
