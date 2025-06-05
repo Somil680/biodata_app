@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useBiodata } from '@/context/BiodataContext'
 import bg from '../../../public/images/template-previews/bg.png'
 import temp1 from '../../../public/images/template-previews/template_1.jpg'
@@ -8,10 +8,12 @@ import temp2 from '../../../public/images/template-previews/template_2.png'
 import { useBiodataSettings } from '@/hooks/useBiodataForm'
 import Image, { StaticImageData } from 'next/image'
 import A4PDFPreview from './ReacttoPrint'
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
 import Template1PDF from '../templates/Template1PDF'
-import { PDFRenderer } from '@react-pdf/renderer'
+import BiodataPDFDocument from './BiodataPDFcomponent'
+import { PDFViewer } from '@react-pdf/renderer'
+// impo/rt ExportPdf from './downloadButton'
+// import { handleSimpleDownload } from './BiodataPDFcomponent'
+// import { PDFRenderer } from '@react-pdf/renderer'
 const templates = [
   {
     id: '1',
@@ -26,7 +28,7 @@ const templates = [
     description: 'A traditional layout with elegant styling',
   },
   {
-    id: '2',
+    id: '3',
     name: 'Classic',
     thumbnail: bg,
     description: 'A traditional layout with elegant styling',
@@ -52,53 +54,11 @@ const colorOptions = [
   { value: '#1F2937', label: 'Dark Gray' },
 ]
 const PreviewSection: React.FC = () => {
+  const biodataRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>
+
   const { biodata } = useBiodata()
+  console.log("🚀 ~ biodata:", biodata)
   const { settings, updateSettings } = useBiodataSettings()
-
-  const previewRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (previewRef.current) {
-      console.log('Preview is ready:', previewRef.current)
-    }
-  }, [])
-  const handleDownloadPDF = async () => {
-    console.log(
-      '🚀 ~ handleDownloadPDF ~ previewRef.current:',
-      previewRef.current,
-      !previewRef.current
-    )
-    if (!previewRef.current) return
-    const canvas = await html2canvas(previewRef.current, {
-      useCORS: true,
-      scale: 2,
-    })
-    const imgData = canvas.toDataURL('image/png')
-    const pdf = new jsPDF('p', 'pt', 'a4')
-    const pdfWidth = pdf.internal.pageSize.getWidth()
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width
-
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-    pdf.save('preview.pdf')
-    
-    // const canvas = await html2canvas(previewRef.current, {
-    //   scale: 2,
-    //   useCORS: true,
-    // })
-
-    // const imgData = canvas.toDataURL('image/png')
-    // const pdf = new jsPDF('p', 'pt', 'a4')
-    // console.log("🚀 ~ handleDownloadPDF ~ pdf:", pdf)
-    // const pdfWidth = pdf.internal.pageSize.getWidth()
-    // console.log("🚀 ~ handleDownloadPDF ~ pdfWidth:", pdfWidth)
-    // const pdfHeight = (canvas.height * pdfWidth) / canvas.width
-
-    // pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-    // pdf.save('preview.pdf')
-  }
-
-  useEffect(() => {
-    console.log('PreviewSection rendered', biodata)
-  }, [biodata])
 
   // Check if biodata exists
   if (!biodata) {
@@ -126,11 +86,9 @@ const PreviewSection: React.FC = () => {
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     updateSettings({ primaryColor: e.target.value })
   }
-
-  // const handleShareEnableToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   updateSettings({ shareEnabled: e.target.checked })
+  // const handleDownload = () => {
+  //   handleSimpleDownload(biodata, biodata.settings.background)
   // }
-
   return (
     <div className="">
       <div className="flex flex-col  mb-4">
@@ -255,75 +213,42 @@ const PreviewSection: React.FC = () => {
       </div>
 
       <>
-        {/* <div className="flex flex-col items-center gap-4">
-          <button
-            onClick={handlePrint}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Download as PDF
-          </button>
-
-          <div style={{ display: 'none' }}>
-            <div ref={printRef}>
-              <A4PDFPreview
-                component={<Template1PDF biodata={biodata} />}
-                background={
-                  typeof biodata.settings.background === 'string'
-                    ? biodata.settings.background
-                    : (
-                        biodata.settings
-                          .background as unknown as StaticImageData
-                      )?.src ||
-                      (typeof bg === 'string'
-                        ? bg
-                        : (bg as StaticImageData)?.src)
-                }
-              />
-            </div>
+        <div className="container mx-auto p-4">
+          <div className="mb-4 flex justify-end">
+            <button
+              // onClick={handleDownload}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              type="button"
+            >
+              Download
+            </button>
+            {/* <A4Download component={<Template1PDF biodata={biodata} />} /> */}
           </div>
 
-          <A4PDFPreview
-            component={<Template1PDF biodata={biodata} />}
-            background={
-              typeof biodata.settings.background === 'string'
-                ? biodata.settings.background
-                : (biodata.settings.background as unknown as StaticImageData)
-                    ?.src ||
-                  (typeof bg === 'string' ? bg : (bg as StaticImageData)?.src)
-            }
-            showDebugInfo
-          />
-        </div> */}
-        {/* <PDFDownloader
-          biodata={biodata}
-        /> */}
-
-        {/**/}
-        <button
-          onClick={handleDownloadPDF}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Download PDF
-        </button>
-
-        <div ref={previewRef}>
-   
-
-          <A4PDFPreview
-            refferance={previewRef}
-            component={<Template1PDF biodata={biodata} />}
-            showDebugInfo
-            background={
-              typeof biodata.settings.background === 'string'
-                ? biodata.settings.background
-                : (biodata.settings.background as unknown as StaticImageData)
-                    ?.src ||
-                  (typeof bg === 'string' ? bg : (bg as StaticImageData)?.src)
-            }
-            enableDownload={true}
-            filename="my-document.pdf"
-          />
+          {/* Wrap your biodata component with a ref */}
+          <div ref={biodataRef}>
+            <Template1PDF biodata={biodata} />
+          </div>
         </div>
+        <PDFViewer className="w-full h-[90vh]">
+          <BiodataPDFDocument
+            biodata={biodata}
+          />
+        </PDFViewer>
+
+        <A4PDFPreview
+          component={<Template1PDF biodata={biodata} />}
+          enableDownload
+          showDebugInfo
+          background={
+            typeof biodata.settings.background === 'string'
+              ? biodata.settings.background
+              : (biodata.settings.background as unknown as StaticImageData)
+                  ?.src ||
+                (typeof bg === 'string' ? bg : (bg as StaticImageData)?.src)
+          }
+          filename="my-document.pdf"
+        />
       </>
     </div>
   )

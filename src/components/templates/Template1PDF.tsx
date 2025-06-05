@@ -2,8 +2,6 @@ import React, { useRef } from 'react'
 import { StyleSheet } from '@react-pdf/renderer'
 import { Biodata } from '@/lib/type'
 import Image from 'next/image'
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
 interface TemplateProps {
   biodata: Biodata
 }
@@ -98,33 +96,8 @@ const Template1PDF: React.FC<TemplateProps> = ({ biodata }) => {
   const contact = biodata?.contactInformation || {}
   const previewRef = useRef<HTMLDivElement>(null)
   
-  const handleDownloadPDF = async () => {
-    console.log("🚀 ~ handleDownloadPDFtt ~ !previewRef.curren:", !previewRef.current)
-    if (!previewRef.current) return
-
-    const canvas = await html2canvas(previewRef.current, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-    })
-
-    const imgData = canvas.toDataURL('image/png')
-    const pdf = new jsPDF('p', 'pt', 'a4')
-    const pdfWidth = pdf.internal.pageSize.getWidth()
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width
-
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight)
-    pdf.save('preview.pdf')
-  }
   return (
     <>
-      <button
-        onClick={handleDownloadPDF}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Download PDF
-      </button>
-
       <div ref={previewRef}>
         <main id="biodata">
           <section
@@ -434,26 +407,6 @@ const Template1PDF: React.FC<TemplateProps> = ({ biodata }) => {
                   </div>
                 )}
 
-                {/* Custom Family Members */}
-
-                {/* {shouldDisplay(family.customMembers) && 
-                family.customMembers?.map((member, index) => (
-                  <div key={member.id} className={fieldStyles.container}>
-                    <span className={fieldStyles.label}>{member.relation}</span>
-                    <span className={fieldStyles.colon}>:</span>
-                    <span className={fieldStyles.value}>
-                      {member.details.split('\n').map((line, i) => (
-                        line ? (
-                          <React.Fragment key={i}>
-                            {line}
-                            {i < member.details.split('\n').length - 1 && <br />}
-                          </React.Fragment>
-                        ) : null
-                      ))}
-                    </span>
-                  </div>
-                ))} */}
-
                 {shouldDisplay(family.customMembers) &&
                   family.customMembers?.map((member, index) => {
                     if (!member || !member.relation || !member.details)
@@ -477,26 +430,6 @@ const Template1PDF: React.FC<TemplateProps> = ({ biodata }) => {
                       </div>
                     )
                   })}
-                {/* {shouldDisplay(family.customMembers) && 
-              family.customMembers?.map((member, index) => {
-                if (!member || !member.relation || !member.details) return null;
-                return (
-                  <div key={`${member.id || index}-${index}`} style={styles.fieldContainer}>
-                    <p style={styles.fieldLabel}>{String(member.relation)}</p>
-                    <p style={styles.fieldColon}>:</p>
-                    <p style={styles.fieldValue}>
-                    {member.details.split('\n').map((line, i) => (
-                        line ? (
-                          <p key={i}>
-                            {line}
-                            {i < member.details.split('\n').length - 1 && <br />}
-                          </p>
-                        ) : null
-                      ))}
-                    </p>
-                  </div>
-                );
-              })} */}
               </section>
 
               {/* Contact Information Section */}
@@ -574,6 +507,9 @@ const Template1PDF: React.FC<TemplateProps> = ({ biodata }) => {
             </section>
           </section>
         </main>
+      </div>
+      <div>
+     
       </div>
     </>
   )

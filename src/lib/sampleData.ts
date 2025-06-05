@@ -5,6 +5,7 @@ export const sampleBiodata: Biodata = {
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   settings: {
+    background: "../../../public/images/template-previews/template_1.jpg",
     idolImage: '/images/om-symbol.png',
     tagline: 'Seeking a life partner who values tradition and culture',
     templateId: '1',
@@ -42,38 +43,61 @@ export const sampleBiodata: Biodata = {
     hobbies: ['Reading', 'Travelling', 'Photography'],
     languages: ['Hindi', 'English', 'Sanskrit'],
     diet: 'Vegetarian',
-    aboutMe: 'I am a software engineer working with a multinational company. I value family traditions and am looking for a life partner who shares similar values. I enjoy reading books in my free time and love to travel and explore new places.',
+    aboutMe:
+      'I am a software engineer working with a multinational company. I value family traditions and am looking for a life partner who shares similar values. I enjoy reading books in my free time and love to travel and explore new places.',
   },
   familyInformation: {
-    fatherName: 'Mukesh Sharma',
-    fatherOccupation: 'Retired Government Officer',
-    motherName: 'Neeta Sharma',
-    motherOccupation: 'Homemaker',
-    brothers: 1,
-    brothersMarried: 1,
-    sisters: 0,
-    sistersMarried: 0,
+    // fatherName: 'Mukesh Sharma',
+    // fatherOccupation: 'Retired Government Officer',
+    // motherName: 'Neeta Sharma',
+    // motherOccupation: 'Homemaker',
+    // brothers: 1,
+    // brothersMarried: 1,
+    // sisters: 0,
+    // sistersMarried: 0,
     familyType: 'Nuclear',
     familyValues: 'Traditional',
     familyStatus: 'Upper Middle Class',
-    familyBackground: 'Originally from Jaipur, settled in Delhi for the last 30 years.',
-    aboutFamily: 'We are a small, close-knit family with traditional values. My father retired as a senior government official, and my mother is a homemaker. My elder brother is married and works as a doctor in the USA.',
+    familyBackground:
+      'Originally from Jaipur, settled in Delhi for the last 30 years.',
+    aboutFamily:
+      'We are a small, close-knit family with traditional values. My father retired as a senior government official, and my mother is a homemaker. My elder brother is married and works as a doctor in the USA.',
     nativePlace: 'Jaipur, Rajasthan',
-    siblings: [
-      {
-        name: 'Dr. Amit Sharma',
-        occupation: 'Medical Doctor',
-        education: 'MBBS, MD',
-        age: 35,
-      }
-    ],
+    // siblings: [
+    //   {
+    //     name: 'Dr. Amit Sharma',
+    //     occupation: 'Medical Doctor',
+    //     education: 'MBBS, MD',
+    //     age: 35,
+    //   },
+    // ],
     customMembers: [
       {
         id: 'custom_1',
         relation: 'Grandfather',
-        details: 'Shri Ramesh Sharma, 80 years, Retired Principal'
-      }
-    ]
+        details: 'Shri Ramesh Sharma \n 0 years \n, Retired Principal',
+      },
+      {
+        id: 'custom_2',
+        relation: 'Nana-Nani',
+        details: 'Shri Ramesh Sharma \n, 80 years,\n Retired Principal',
+      },
+      {
+        id: 'custom_3',
+        relation: 'Dadaji & Dadiji',
+        details: 'Shri Ramesh Sharma \n, 80 years \n, Retired Principal',
+      },
+      {
+        id: 'custom_4',
+        relation: 'Papaji & Mummyji',
+        details: 'Shri Ramesh Sharma\n, 80 years,\n Retired Principal',
+      },
+      {
+        id: 'custom_5',
+        relation: 'Tauji & Tai',
+        details: 'Shri Ramesh Sharma,\n 80 years\n, Retired Principal',
+      },
+    ],
   },
   contactInformation: {
     mobileNumber: '+91 98765 43210',
@@ -95,11 +119,12 @@ export const sampleBiodata: Biodata = {
     caste: ['Brahmin', 'Baniya'],
     maritalStatus: ['Never Married'],
     location: ['Delhi NCR', 'Jaipur'],
-    additionalPreferences: 'Looking for a well-educated girl who values Indian traditions and culture. She should be understanding, supportive, and family-oriented.',
+    additionalPreferences:
+      'Looking for a well-educated girl who values Indian traditions and culture. She should be understanding, supportive, and family-oriented.',
   },
   additionalPhotos: ['/images/sample-profile.jpg'],
   horoscope: {
     url: '/documents/sample-horoscope.pdf',
     showInBiodata: true,
   },
-}; 
+} 

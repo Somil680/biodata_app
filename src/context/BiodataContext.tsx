@@ -10,6 +10,9 @@ import {
   PartnerPreferences,
   BiodataSettings
 } from '@/lib/type';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
 // Action Types
 export enum BiodataActionTypes {
   UPDATE_PERSONAL_INFO = 'UPDATE_PERSONAL_INFO',
@@ -332,11 +335,20 @@ export const BiodataProvider: React.FC<BiodataProviderProps> = ({ children }) =>
     }
   };
 
-  // Function to export biodata as PDF (placeholder implementation)
+  // Function to export biodata as PDF
   const exportAsPDF = async (): Promise<void> => {
-    // In a real app, you would implement PDF generation logic here
-    console.log('Exporting biodata as PDF...');
-    return Promise.resolve();
+    const element = document.getElementById('biodata-preview-pdf');
+    if (!element) {
+      console.error('Preview element not found');
+      return;
+    }
+    const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'pt', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save('biodata.pdf');
   };
 
   // Function to export biodata as Image (placeholder implementation)
