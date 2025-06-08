@@ -1,10 +1,12 @@
 import React, { useRef } from 'react'
 import { StyleSheet } from '@react-pdf/renderer'
-import { Biodata } from '@/lib/type'
+// import { Biodata } from '@/lib/type'
 import Image from 'next/image'
-interface TemplateProps {
-  biodata: Biodata
-}
+import { useBiodata } from '@/context/BiodataContext'
+// import { useBiodata } from '@/context/BiodataContext'
+// interface TemplateProps {
+//   biodata: Biodata
+// }
 
 // Helper function to check if a value should be displayed
 const shouldDisplay = (value: unknown): boolean => {
@@ -89,7 +91,9 @@ const styles = StyleSheet.create({
 })
 
 // The main Template component for PDF
-const Template1PDF: React.FC<TemplateProps> = ({ biodata }) => {
+const Template1PDF = () => {
+    const { biodata } = useBiodata()
+  
   // Use optional chaining to handle potentially undefined values
   const personal = biodata?.personalInformation || {}
   const family = biodata?.familyInformation || {}

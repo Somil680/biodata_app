@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { useBiodata } from '@/context/BiodataContext'
 import bg from '../../../public/images/template-previews/bg.png'
 import temp1 from '../../../public/images/template-previews/template_1.jpg'
@@ -9,11 +9,12 @@ import { useBiodataSettings } from '@/hooks/useBiodataForm'
 import Image, { StaticImageData } from 'next/image'
 import A4PDFPreview from './ReacttoPrint'
 import Template1PDF from '../templates/Template1PDF'
-import BiodataPDFDocument from './BiodataPDFcomponent'
-import { PDFViewer } from '@react-pdf/renderer'
+import { pdf, PDFViewer } from '@react-pdf/renderer'
 // impo/rt ExportPdf from './downloadButton'
 // import { handleSimpleDownload } from './BiodataPDFcomponent'
 // import { PDFRenderer } from '@react-pdf/renderer'
+import {saveAs} from "file-saver"
+import BiodataPDFDocument from './BiodataPDFcomponent'
 const templates = [
   {
     id: '1',
@@ -54,10 +55,8 @@ const colorOptions = [
   { value: '#1F2937', label: 'Dark Gray' },
 ]
 const PreviewSection: React.FC = () => {
-  const biodataRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>
 
   const { biodata } = useBiodata()
-  console.log("🚀 ~ biodata:", biodata)
   const { settings, updateSettings } = useBiodataSettings()
 
   // Check if biodata exists
@@ -86,9 +85,28 @@ const PreviewSection: React.FC = () => {
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     updateSettings({ primaryColor: e.target.value })
   }
-  // const handleDownload = () => {
-  //   handleSimpleDownload(biodata, biodata.settings.background)
-  // }
+  const handleDownload = async() => {
+    const fileName = `biodata-${biodata.personalInformation.fullName}.pdf`
+    console.log("🚀 ~ handleDownload ~ fileName:", fileName)
+    const blob = await pdf(
+      <Template1PDF />
+      // <A4PDFPreview
+      //   component={<Template1PDF biodata={biodata} />}
+      //   enableDownload
+      //   showDebugInfo
+      //   background={
+      //     typeof biodata.settings.background === 'string'
+      //       ? biodata.settings.background
+      //       : (biodata.settings.background as unknown as StaticImageData)
+      //           ?.src ||
+      //         (typeof bg === 'string' ? bg : (bg as StaticImageData)?.src)
+      //   }
+      //   // filename="my-document.pdf"
+      // />
+    ).toBlob()
+    console.log("🚀 ~ handleDownload ~ blob:", blob)
+    saveAs(blob, fileName)
+  }
   return (
     <div className="">
       <div className="flex flex-col  mb-4">
@@ -216,7 +234,7 @@ const PreviewSection: React.FC = () => {
         <div className="container mx-auto p-4">
           <div className="mb-4 flex justify-end">
             <button
-              // onClick={handleDownload}
+              onClick={handleDownload}
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
               type="button"
             >
@@ -226,18 +244,18 @@ const PreviewSection: React.FC = () => {
           </div>
 
           {/* Wrap your biodata component with a ref */}
-          <div ref={biodataRef}>
+          {/* <div ref={biodataRef}>
             <Template1PDF biodata={biodata} />
-          </div>
+          </div> */}
         </div>
-        <PDFViewer className="w-full h-[90vh]">
+        <PDFViewer className="w-full h-[90vh]" showToolbar={false} style={{ border: 'none', backgroundColor: "white" }} >
           <BiodataPDFDocument
             biodata={biodata}
           />
         </PDFViewer>
 
         <A4PDFPreview
-          component={<Template1PDF biodata={biodata} />}
+          component={<Template1PDF />}
           enableDownload
           showDebugInfo
           background={

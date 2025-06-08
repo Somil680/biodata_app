@@ -5,18 +5,16 @@ import {
   Text,
   View,
   StyleSheet,
-//   PDFDownloadLink,
   Image,
-//   Font,
 } from '@react-pdf/renderer'
 import { Biodata } from '@/lib/type'
-import bg from '../../../public/images/template-previews/template_1.jpg'
 
-// Register fonts if needed
-// Font.register({
-//   family: 'Roboto',
-//   src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf',
-// })
+// Convert your background image to base64 or use a public URL
+// Option 1: Use a public URL instead of local import
+const BACKGROUND_IMAGE_URL = '/images/template-previews/template_2.png'
+
+// Option 2: Base64 encoded image (recommended for consistent loading)
+// const BACKGROUND_IMAGE_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...' // Your base64 string here
 
 // Helper function
 const shouldDisplay = (value: unknown): boolean => {
@@ -29,30 +27,28 @@ const shouldDisplay = (value: unknown): boolean => {
 // Styles for PDF
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
-    // backgroundColor: '#ffffff',
     position: 'relative',
+    padding: 0,
+    margin: 0,
   },
   backgroundContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
-    // opacity: 0.1,
+    right: 0,
+    bottom: 0,
     zIndex: -1,
   },
   backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
     width: '100%',
     height: '100%',
-    // opacity: 0.1,
-    // zIndex: -1,
-    // width: '100%',
-    // height: '100%',
+    objectFit: 'cover',
+  },
+  contentContainer: {
+    position: 'relative',
+    zIndex: 1,
+    padding: 40,
+    backgroundColor: 'transparent',
   },
   container: {
     display: 'flex',
@@ -121,342 +117,845 @@ const styles = StyleSheet.create({
 
 // PDF Document Component
 const BiodataPDFDocument: React.FC<{ biodata: Biodata }> = ({ biodata }) => {
-  console.log("🚀 ~ biodjcv nyfdguymyata:", biodata)
+  console.log('🚀 ~ biodata:', biodata)
   const personal = biodata?.personalInformation || {}
   const family = biodata?.familyInformation || {}
   const contact = biodata?.contactInformation || {}
 
+  // Function to get background image source
+  const getBackgroundImageSrc = () => {
+    // Option 1: Use public URL
+    return BACKGROUND_IMAGE_URL
+
+    // Option 2: Use base64 (uncomment if using base64)
+    // return BACKGROUND_IMAGE_BASE64
+
+    // Option 3: Use the original approach with error handling
+    // try {
+    //   return bg?.src || bg || BACKGROUND_IMAGE_URL
+    // } catch (error) {
+    //   console.warn('Background image not found, using fallback')
+    //   return BACKGROUND_IMAGE_URL
+    // }
+  }
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Background Image */}
+        {/* Background Image - Fixed positioning */}
         {biodata.settings.background && (
-          <View fixed style={styles.backgroundContainer}>
-          <Image
-            fixed
-            src={bg}
-            style={styles.backgroundImage}
-          />
+          <View style={styles.backgroundContainer}>
+            <Image
+              src={getBackgroundImageSrc()}
+              style={styles.backgroundImage}
+              cache={false} // Disable caching to ensure fresh load
+            />
           </View>
         )}
 
-        {/* Header Section */}
-        <View style={styles.header}>
-          {biodata.settings.idolImage && (
-            <Image src={biodata.settings.idolImage} style={styles.idolImage} />
-          )}
-          {biodata.settings.tagline && (
-            <Text style={styles.tagline}>{biodata.settings.tagline}</Text>
-          )}
-        </View>
-
-        {/* Personal Information Section */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Personal Information</Text>
-
-          {/* Profile Image - Positioned Absolutely */}
-          {biodata.settings.profilePhoto && (
-            <View style={styles.profileImageContainer}>
-              <Image
-                src={biodata.settings.profilePhoto}
-                style={styles.profileImage}
-              />
-            </View>
-          )}
-
-          {shouldDisplay(personal.fullName) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Full Name</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(personal.fullName)}</Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.dateOfBirth) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Date of Birth</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(personal.dateOfBirth)}
+        {/* Content Container with proper z-index */}
+        <View style={styles.contentContainer}>
+          <View style={styles.container}>
+            {/* Header Section */}
+            <View style={styles.header}>
+              {biodata.settings.idolImage && (
+                <Image
+                  src={biodata.settings.idolImage}
+                  style={styles.idolImage}
+                />
+              )}
+              <Text style={styles.tagline}>
+                {biodata.settings.tagline ?? ''}
               </Text>
             </View>
-          )}
 
-          {shouldDisplay(personal.age) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Age</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(personal.age)}</Text>
-            </View>
-          )}
+            {/* Personal Information Section */}
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Personal Information</Text>
 
-          {shouldDisplay(personal.timeOfBirth) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Time of Birth</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(personal.timeOfBirth)}
-              </Text>
-            </View>
-          )}
+              {/* Profile Image - Positioned Absolutely */}
+              {biodata.settings.profilePhoto && (
+                <View style={styles.profileImageContainer}>
+                  <Image
+                    src={biodata.settings.profilePhoto}
+                    style={styles.profileImage}
+                  />
+                </View>
+              )}
 
-          {shouldDisplay(personal.placeOfBirth) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Place of Birth</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(personal.placeOfBirth)}
-              </Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.height) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Height</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(personal.height)}</Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.weight) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Weight</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(personal.weight)}</Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.bloodGroup) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Blood Group</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(personal.bloodGroup)}
-              </Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.maritalStatus) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Marital Status</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(personal.maritalStatus)}
-              </Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.religion) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Religion</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(personal.religion)}</Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.education) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Education</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(personal.education)}
-              </Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.profession) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Profession</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(personal.profession)}
-              </Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.annualIncome) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Annual Income</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(personal.annualIncome)}
-              </Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.caste) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Caste</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(personal.caste)}</Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.subCaste) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Sub-Caste</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(personal.subCaste)}</Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.gothra) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Gothra</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(personal.gothra)}</Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.hobbies) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Hobbies</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {Array.isArray(personal.hobbies)
-                  ? personal.hobbies.join(', ')
-                  : String(personal.hobbies)}
-              </Text>
-            </View>
-          )}
-
-          {shouldDisplay(personal.languages) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Languages</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {Array.isArray(personal.languages)
-                  ? personal.languages.join(', ')
-                  : String(personal.languages)}
-              </Text>
-            </View>
-          )}
-        </View>
-
-        {/* Family Information Section */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Family Information</Text>
-
-          {shouldDisplay(family.familyType) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Family Type</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(family.familyType)}</Text>
-            </View>
-          )}
-
-          {shouldDisplay(family.familyValues) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Family Values</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(family.familyValues)}
-              </Text>
-            </View>
-          )}
-
-          {shouldDisplay(family.familyStatus) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Family Status</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(family.familyStatus)}
-              </Text>
-            </View>
-          )}
-
-          {shouldDisplay(family.nativePlace) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Native Place</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(family.nativePlace)}
-              </Text>
-            </View>
-          )}
-
-          {/* Custom Family Members */}
-          {shouldDisplay(family.customMembers) &&
-            family.customMembers?.map((member, index) => {
-              if (!member || !member.relation || !member.details) return null
-              return (
-                <View
-                  key={`${member.id || index}-${index}`}
-                  style={styles.fieldContainer}
-                >
-                  <Text style={styles.fieldLabel}>
-                    {String(member.relation)}
-                  </Text>
+              {shouldDisplay(personal.fullName) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Full Name</Text>
                   <Text style={styles.fieldColon}>:</Text>
                   <Text style={styles.fieldValue}>
-                    {String(member.details)}
+                    {String(personal.fullName)}
                   </Text>
                 </View>
-              )
-            })}
-        </View>
+              )}
 
-        {/* Contact Information Section */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Contact Information</Text>
+              {shouldDisplay(personal.dateOfBirth) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Date of Birth</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.dateOfBirth)}
+                  </Text>
+                </View>
+              )}
 
-          {shouldDisplay(contact.mobileNumber) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Mobile Number</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>
-                {String(contact.mobileNumber)}
-              </Text>
+              {shouldDisplay(personal.age) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Age</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>{String(personal.age)}</Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.timeOfBirth) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Time of Birth</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.timeOfBirth)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.placeOfBirth) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Place of Birth</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.placeOfBirth)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.height) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Height</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.height)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.weight) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Weight</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.weight)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.bloodGroup) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Blood Group</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.bloodGroup)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.maritalStatus) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Marital Status</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.maritalStatus)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.religion) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Religion</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.religion)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.education) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Education</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.education)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.profession) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Profession</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.profession)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.annualIncome) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Annual Income</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.annualIncome)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.caste) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Caste</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.caste)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.subCaste) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Sub-Caste</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.subCaste)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.gothra) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Gothra</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(personal.gothra)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.hobbies) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Hobbies</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {Array.isArray(personal.hobbies)
+                      ? personal.hobbies.join(', ')
+                      : String(personal.hobbies)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(personal.languages) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Languages</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {Array.isArray(personal.languages)
+                      ? personal.languages.join(', ')
+                      : String(personal.languages)}
+                  </Text>
+                </View>
+              )}
             </View>
-          )}
 
-          {shouldDisplay(contact.email) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Email</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(contact.email)}</Text>
-            </View>
-          )}
+            {/* Family Information Section */}
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Family Information</Text>
 
-          {shouldDisplay(contact.address) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Address</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(contact.address)}</Text>
-            </View>
-          )}
+              {shouldDisplay(family.familyType) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Family Type</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(family.familyType)}
+                  </Text>
+                </View>
+              )}
 
-          {shouldDisplay(contact.city) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>City</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(contact.city)}</Text>
-            </View>
-          )}
+              {shouldDisplay(family.familyValues) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Family Values</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(family.familyValues)}
+                  </Text>
+                </View>
+              )}
 
-          {shouldDisplay(contact.state) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>State</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(contact.state)}</Text>
-            </View>
-          )}
+              {shouldDisplay(family.familyStatus) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Family Status</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(family.familyStatus)}
+                  </Text>
+                </View>
+              )}
 
-          {shouldDisplay(contact.country) && (
-            <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Country</Text>
-              <Text style={styles.fieldColon}>:</Text>
-              <Text style={styles.fieldValue}>{String(contact.country)}</Text>
+              {shouldDisplay(family.nativePlace) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Native Place</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(family.nativePlace)}
+                  </Text>
+                </View>
+              )}
+
+              {/* Custom Family Members */}
+              {shouldDisplay(family.customMembers) &&
+                family.customMembers?.map((member, index) => {
+                  if (!member || !member.relation || !member.details)
+                    return null
+                  return (
+                    <View
+                      key={`${member.id || index}-${index}`}
+                      style={styles.fieldContainer}
+                    >
+                      <Text style={styles.fieldLabel}>
+                        {String(member.relation)}
+                      </Text>
+                      <Text style={styles.fieldColon}>:</Text>
+                      <Text style={styles.fieldValue}>
+                        {String(member.details)}
+                      </Text>
+                    </View>
+                  )
+                })}
             </View>
-          )}
+
+            {/* Contact Information Section */}
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Contact Information</Text>
+
+              {shouldDisplay(contact.mobileNumber) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Mobile Number</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(contact.mobileNumber)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(contact.email) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Email</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>{String(contact.email)}</Text>
+                </View>
+              )}
+
+              {shouldDisplay(contact.address) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Address</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(contact.address)}
+                  </Text>
+                </View>
+              )}
+
+              {shouldDisplay(contact.city) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>City</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>{String(contact.city)}</Text>
+                </View>
+              )}
+
+              {shouldDisplay(contact.state) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>State</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>{String(contact.state)}</Text>
+                </View>
+              )}
+
+              {shouldDisplay(contact.country) && (
+                <View style={styles.fieldContainer}>
+                  <Text style={styles.fieldLabel}>Country</Text>
+                  <Text style={styles.fieldColon}>:</Text>
+                  <Text style={styles.fieldValue}>
+                    {String(contact.country)}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
         </View>
       </Page>
     </Document>
   )
 }
+
 export default BiodataPDFDocument
 
+// import React from 'react'
+// import {
+//   Document,
+//   Page,
+//   Text,
+//   View,
+//   StyleSheet,
+// //   PDFDownloadLink,
+//   Image,
+// //   Font,
+// } from '@react-pdf/renderer'
+// import { Biodata } from '@/lib/type'
+// import bg from '../../../public/images/template-previews/template_2.png'
 
+// // Register fonts if needed
+// // Font.register({
+// //   family: 'Roboto',
+// //   src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf',
+// // })
+
+// // Helper function
+// const shouldDisplay = (value: unknown): boolean => {
+//   if (value === undefined || value === null || value === '') return false
+//   if (typeof value === 'string') return value.trim().length > 0
+//   if (Array.isArray(value)) return value.length > 0
+//   return true
+// }
+
+// // Styles for PDF
+// const styles = StyleSheet.create({
+//   page: {
+//     // padding: 40,
+//     // backgroundColor: '#ffffff',
+//     position: 'relative',
+//   },
+//   backgroundContainer: {
+//     position: 'absolute',
+//     top: 0,
+//     left: 0,
+//     width: '100%',
+//     height: '100%',
+//     // opacity: 0.1,
+//     zIndex: -1,
+//   },
+//   backgroundImage: {
+//     position: 'absolute',
+//     top: 0,
+//     left: 0,
+//     right: 0,
+//     width: '100%',
+//     height: '100%',
+//     // opacity: 0.1,
+//     // zIndex: -1,
+//     // width: '100%',
+//     // height: '100%',
+//   },
+//   container: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     gap: 10,
+//   },
+//   header: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     alignItems: 'center',
+//     marginBottom: 20,
+//   },
+//   idolImage: {
+//     width: 60,
+//     height: 60,
+//     marginBottom: 10,
+//   },
+//   tagline: {
+//     fontSize: 14,
+//     fontWeight: 'bold',
+//     textAlign: 'center',
+//   },
+//   sectionContainer: {
+//     marginBottom: 20,
+//     position: 'relative',
+//   },
+//   sectionTitle: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     marginBottom: 10,
+//     borderBottom: '2px solid #000',
+//     paddingBottom: 5,
+//   },
+//   fieldContainer: {
+//     display: 'flex',
+//     flexDirection: 'row',
+//     marginBottom: 6,
+//   },
+//   fieldLabel: {
+//     width: 150,
+//     fontSize: 12,
+//     fontWeight: 'medium',
+//   },
+//   fieldColon: {
+//     width: 20,
+//     fontSize: 12,
+//   },
+//   fieldValue: {
+//     flex: 1,
+//     fontSize: 12,
+//   },
+//   profileImageContainer: {
+//     position: 'absolute',
+//     right: 20,
+//     top: 0,
+//     width: 150,
+//     height: 200,
+//     border: '2px solid #D40000',
+//   },
+//   profileImage: {
+//     width: '100%',
+//     height: '100%',
+//     objectFit: 'cover',
+//   },
+// })
+
+// // PDF Document Component
+// const BiodataPDFDocument: React.FC<{ biodata: Biodata }> = ({ biodata }) => {
+//   console.log("🚀 ~ biodjcv nyfdguymyata:", biodata)
+//   const personal = biodata?.personalInformation || {}
+//   const family = biodata?.familyInformation || {}
+//   const contact = biodata?.contactInformation || {}
+
+//   return (
+//     <Document>
+//       <Page size="A4" style={styles.page}>
+//         {/* Background Image */}
+//         {biodata.settings.background && (
+//           <View fixed style={styles.backgroundContainer}>
+//           <Image
+//             fixed
+//             src={bg.src}
+//             style={styles.backgroundImage}
+//           />
+//           </View>
+//         )}
+
+//         {/* Header Section */}
+//         <View style={styles.header}>
+//           {biodata.settings.idolImage && (
+//             <Image src={biodata.settings.idolImage} style={styles.idolImage} />
+//           )}
+//           {/* {biodata.settings.tagline && (
+//           )} */}
+//           <Text style={styles.tagline}>{biodata.settings.tagline  ?? ""}</Text>
+//         </View>
+
+//         {/* Personal Information Section */}
+//         <View style={styles.sectionContainer}>
+//           <Text style={styles.sectionTitle}>Personal Information</Text>
+
+//           {/* Profile Image - Positioned Absolutely */}
+//           {biodata.settings.profilePhoto && (
+//             <View style={styles.profileImageContainer}>
+//               <Image
+//                 src={biodata.settings.profilePhoto}
+//                 style={styles.profileImage}
+//               />
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.fullName) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Full Name</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(personal.fullName)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.dateOfBirth) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Date of Birth</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(personal.dateOfBirth)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.age) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Age</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(personal.age)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.timeOfBirth) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Time of Birth</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(personal.timeOfBirth)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.placeOfBirth) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Place of Birth</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(personal.placeOfBirth)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.height) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Height</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(personal.height)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.weight) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Weight</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(personal.weight)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.bloodGroup) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Blood Group</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(personal.bloodGroup)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.maritalStatus) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Marital Status</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(personal.maritalStatus)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.religion) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Religion</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(personal.religion)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.education) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Education</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(personal.education)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.profession) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Profession</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(personal.profession)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.annualIncome) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Annual Income</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(personal.annualIncome)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.caste) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Caste</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(personal.caste)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.subCaste) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Sub-Caste</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(personal.subCaste)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.gothra) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Gothra</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(personal.gothra)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.hobbies) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Hobbies</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {Array.isArray(personal.hobbies)
+//                   ? personal.hobbies.join(', ')
+//                   : String(personal.hobbies)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(personal.languages) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Languages</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {Array.isArray(personal.languages)
+//                   ? personal.languages.join(', ')
+//                   : String(personal.languages)}
+//               </Text>
+//             </View>
+//           )}
+//         </View>
+
+//         {/* Family Information Section */}
+//         <View style={styles.sectionContainer}>
+//           <Text style={styles.sectionTitle}>Family Information</Text>
+
+//           {shouldDisplay(family.familyType) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Family Type</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(family.familyType)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(family.familyValues) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Family Values</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(family.familyValues)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(family.familyStatus) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Family Status</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(family.familyStatus)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(family.nativePlace) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Native Place</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(family.nativePlace)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {/* Custom Family Members */}
+//           {shouldDisplay(family.customMembers) &&
+//             family.customMembers?.map((member, index) => {
+//               if (!member || !member.relation || !member.details) return null
+//               return (
+//                 <View
+//                   key={`${member.id || index}-${index}`}
+//                   style={styles.fieldContainer}
+//                 >
+//                   <Text style={styles.fieldLabel}>
+//                     {String(member.relation)}
+//                   </Text>
+//                   <Text style={styles.fieldColon}>:</Text>
+//                   <Text style={styles.fieldValue}>
+//                     {String(member.details)}
+//                   </Text>
+//                 </View>
+//               )
+//             })}
+//         </View>
+
+//         {/* Contact Information Section */}
+//         <View style={styles.sectionContainer}>
+//           <Text style={styles.sectionTitle}>Contact Information</Text>
+
+//           {shouldDisplay(contact.mobileNumber) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Mobile Number</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>
+//                 {String(contact.mobileNumber)}
+//               </Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(contact.email) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Email</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(contact.email)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(contact.address) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Address</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(contact.address)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(contact.city) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>City</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(contact.city)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(contact.state) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>State</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(contact.state)}</Text>
+//             </View>
+//           )}
+
+//           {shouldDisplay(contact.country) && (
+//             <View style={styles.fieldContainer}>
+//               <Text style={styles.fieldLabel}>Country</Text>
+//               <Text style={styles.fieldColon}>:</Text>
+//               <Text style={styles.fieldValue}>{String(contact.country)}</Text>
+//             </View>
+//           )}
+//         </View>
+//       </Page>
+//     </Document>
+//   )
+// }
+// export default BiodataPDFDocument
 
 // import jsPDF from 'jspdf'
 // import { Biodata } from '@/lib/type'
