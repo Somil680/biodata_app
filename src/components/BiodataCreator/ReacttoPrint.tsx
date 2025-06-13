@@ -13,8 +13,11 @@
 //   component,
 //   background,
 //   showDebugInfo = false,
-//   // filename = 'document.pdf',
+//   enableDownload = true,
+//   filename = 'document.pdf',
 // }) => {
+//   console.log("🚀 ~ filename:", filename)
+//   console.log("🚀 ~ enableDownload:", enableDownload)
 //   const [pages, setPages] = useState(1)
 //   const [scale, setScale] = useState(1)
 //   const [windowWidth, setWindowWidth] = useState(0)
@@ -69,20 +72,92 @@
 //     }
 //   }, [component, CONTENT_HEIGHT])
 
+//   // Browser print download function
+//   // const handlePrintDownload = () => {
+//   //   // Save current title
+//   //   const originalTitle = document.title
+
+//   //   // Set document title to filename (without .pdf extension)
+//   //   document.title = filename.replace('.pdf', '')
+
+//   //   // Trigger print dialog
+//   //   window.print()
+
+//   //   // Restore original title
+//   //   setTimeout(() => {
+//   //     document.title = originalTitle
+//   //   }, 100)
+//   // }
+
+//   // HTML2Canvas + jsPDF download function (alternative approach)
+//   // const handleCanvasDownload = async () => {
+//   //   try {
+//   //     // Dynamically import libraries
+//   //     const html2canvas = (await import('html2canvas')).default
+//   //     const jsPDF = (await import('jspdf')).jsPDF
+
+//   //     const printContainer = document.querySelector('.print-target')
+//   //     if (!printContainer) return
+
+//   //     // Create canvas from the print container
+//   //     const canvas = await html2canvas(printContainer as HTMLElement, {
+//   //       scale: 2, // Higher resolution
+//   //       useCORS: true,
+//   //       allowTaint: true,
+//   //       backgroundColor: '#ffffff',
+//   //       height: pages * PAGE_HEIGHT,
+//   //       width: PAGE_WIDTH,
+//   //     })
+
+//   //     // Create PDF
+//   //     const pdf = new jsPDF({
+//   //       orientation: 'portrait',
+//   //       unit: 'px',
+//   //       format: [PAGE_WIDTH, PAGE_HEIGHT],
+//   //     })
+
+//   //     const imgData = canvas.toDataURL('image/png')
+//   //     const imgWidth = PAGE_WIDTH
+//   //     const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+//   //     let heightLeft = imgHeight
+//   //     let position = 0
+
+//   //     // Add first page
+//   //     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+//   //     heightLeft -= PAGE_HEIGHT
+
+//   //     // Add additional pages if needed
+//   //     while (heightLeft >= 0) {
+//   //       position = heightLeft - imgHeight
+//   //       pdf.addPage()
+//   //       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+//   //       heightLeft -= PAGE_HEIGHT
+//   //     }
+
+//   //     pdf.save(filename)
+//   //   } catch (error) {
+//   //     console.error('Error generating PDF:', error)
+//   //     // Fallback to print
+//   //     handlePrintDownload()
+//   //   }
+//   // }
+
 //   const scaledHeight = PAGE_HEIGHT * scale
 //   const heightDifference = PAGE_HEIGHT - scaledHeight
+
 //   return (
 //     <>
 //       <style
 //         dangerouslySetInnerHTML={{
 //           __html: `
 //         @media print {
-//           @page { 
-//             size: A4; 
-//             margin: 0; 
+//           @page {
+//             size: A4;
+//             margin: 0;
 //           }
           
-//           body { 
+//           body {
 //             margin: 0 !important;
 //             padding: 0 !important;
 //             background: white !important;
@@ -97,10 +172,11 @@
 //           .print-target,
 //           .print-target * {
 //             display: block !important;
+//             visibility: visible !important;
 //           }
           
-//           .no-print { 
-//             display: none !important; 
+//           .no-print {
+//             display: none !important;
 //           }
           
 //           .pdf-page {
@@ -114,10 +190,11 @@
 //             box-shadow: none !important;
 //             border: none !important;
 //             position: relative !important;
+//             background: white !important;
 //           }
           
-//           .pdf-page:last-child { 
-//             page-break-after: auto; 
+//           .pdf-page:last-child {
+//             page-break-after: auto;
 //           }
           
 //           /* Fix content positioning for print */
@@ -128,15 +205,61 @@
 //       `,
 //         }}
 //       />
+//       <button className=' bg-blue-600 w-20 h-4                 '  >Download Button</button>
+//       <div className="">
+//         {/* Download Button */}
+//         {/* {enableDownload && (
+//           <div className="fixed top-4 right-4 z-50 no-print">
+//             <div className="flex gap-2">
+//               <button
+//                 onClick={handlePrintDownload}
+//                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2"
+//                 title="Print/Download as PDF"
+//               >
+//                 <svg
+//                   className="w-4 h-4"
+//                   fill="none"
+//                   stroke="currentColor"
+//                   viewBox="0 0 24 24"
+//                 >
+//                   <path
+//                     strokeLinecap="round"
+//                     strokeLinejoin="round"
+//                     strokeWidth={2}
+//                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+//                   />
+//                 </svg>
+//                 Download PDF
+//               </button>
 
-//       <div className="min-h-screen  ">
-//         {/* Download Button - Simple and Direct */}
-
+//               <button
+//                 onClick={handleCanvasDownload}
+//                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2"
+//                 title="Generate PDF using Canvas"
+//               >
+//                 <svg
+//                   className="w-4 h-4"
+//                   fill="none"
+//                   stroke="currentColor"
+//                   viewBox="0 0 24 24"
+//                 >
+//                   <path
+//                     strokeLinecap="round"
+//                     strokeLinejoin="round"
+//                     strokeWidth={2}
+//                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+//                   />
+//                 </svg>
+//                 Canvas PDF
+//               </button>
+//             </div>
+//           </div>
+//         )} */}
 
 //         {/* Hidden measurement container */}
 //         <div
 //           ref={contentRef}
-//           className="fixed opacity-0 pointer-events-none no-print"
+//           className="fixed opacity-1 pointer-events-none no-print"
 //           style={{
 //             width: `${CONTENT_WIDTH}px`,
 //             left: '-9999px',
@@ -147,8 +270,8 @@
 //         </div>
 
 //         {/* Main content */}
-//         <div className="py-4 px-4 print-container print-target">
-//           <div className="flex flex-col items-center gap-4">
+//         <div className="py-4 px-4 print-container print-target ">
+//           <div className="flex flex-col items-center gap-4 ">
 //             {isReady &&
 //               [...Array(pages)].map((_, pageIndex) => (
 //                 <div
@@ -160,7 +283,7 @@
 //                   }}
 //                 >
 //                   <div
-//                     className="pdf-page relative bg-white shadow-xl transition-transform duration-300"
+//                     className="pdf-page relative bg-yellow-500 shadow-xl transition-transform duration-300"
 //                     style={{
 //                       width: `${PAGE_WIDTH}px`,
 //                       height: `${PAGE_HEIGHT}px`,
@@ -209,9 +332,6 @@
 //                     <div className="absolute bottom-4 right-4 text-xs text-gray-400 no-print">
 //                       Page {pageIndex + 1} of {pages}
 //                     </div>
-
-//                     {/* Border */}
-//                     {/* <div className="absolute inset-0 border border-gray-300 pointer-events-none no-print"></div> */}
 //                   </div>
 //                 </div>
 //               ))}
@@ -221,14 +341,17 @@
 //         {/* Debug info */}
 //         {showDebugInfo && (
 //           <div className="fixed bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded text-xs no-print">
-//             Width: {windowWidth}px | Scale: {(scale * 100).toFixed(0)}%
+//             Width: {windowWidth}px | Scale: {(scale * 100).toFixed(0)}% | Pages:{' '}
+//             {pages}
 //           </div>
 //         )}
 //       </div>
 //     </>
 //   )
 // }
+
 // export default A4PDFPreview
+
 'use client'
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -247,10 +370,14 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
   enableDownload = true,
   filename = 'document.pdf',
 }) => {
+  console.log('🚀 ~ filename:', filename)
+  console.log('🚀 ~ enableDownload:', enableDownload)
   const [pages, setPages] = useState(1)
   const [scale, setScale] = useState(1)
   const [windowWidth, setWindowWidth] = useState(0)
+  const [isDownloading, setIsDownloading] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
+  const mainContentRef = useRef<HTMLDivElement>(null) // New ref for main content
   const [isReady, setIsReady] = useState(false)
 
   // A4 dimensions at 96 DPI
@@ -301,41 +428,29 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
     }
   }, [component, CONTENT_HEIGHT])
 
-  // Browser print download function
-  const handlePrintDownload = () => {
-    // Save current title
-    const originalTitle = document.title
-
-    // Set document title to filename (without .pdf extension)
-    document.title = filename.replace('.pdf', '')
-
-    // Trigger print dialog
-    window.print()
-
-    // Restore original title
-    setTimeout(() => {
-      document.title = originalTitle
-    }, 100)
-  }
-
-  // HTML2Canvas + jsPDF download function (alternative approach)
+  // HTML2Canvas + jsPDF download function
   const handleCanvasDownload = async () => {
+    if (!mainContentRef.current || !isReady) return
+
     try {
+      setIsDownloading(true)
+
       // Dynamically import libraries
       const html2canvas = (await import('html2canvas')).default
       const jsPDF = (await import('jspdf')).jsPDF
 
-      const printContainer = document.querySelector('.print-target')
-      if (!printContainer) return
+      // Temporarily reset transform to capture at full scale
+      const originalTransform = mainContentRef.current.style.transform
+      console.log("🚀 ~ handleCanvasDownload ~ originalTransform:", originalTransform)
+      const pageElements = mainContentRef.current.querySelectorAll('.pdf-page')
+      console.log("🚀 ~ handleCanvasDownload ~ pageElements0000000000000:", pageElements)
 
-      // Create canvas from the print container
-      const canvas = await html2canvas(printContainer as HTMLElement, {
-        scale: 2, // Higher resolution
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        height: pages * PAGE_HEIGHT,
-        width: PAGE_WIDTH,
+      // Store original transforms and reset them
+      const originalTransforms: string[] = []
+      pageElements.forEach((element, index) => {
+        const htmlElement = element as HTMLElement
+        originalTransforms[index] = htmlElement.style.transform
+        htmlElement.style.transform = 'scale(1)'
       })
 
       // Create PDF
@@ -345,30 +460,63 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
         format: [PAGE_WIDTH, PAGE_HEIGHT],
       })
 
-      const imgData = canvas.toDataURL('image/png')
-      const imgWidth = PAGE_WIDTH
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      // Capture each page separately for better quality
+      for (let pageIndex = 0; pageIndex < pages; pageIndex++) {
+        const pageElement = pageElements[pageIndex] as HTMLElement
+        console.log("🚀 ~ 0 handleCanvasDownload ~ pageElement:", pageElement)
 
-      let heightLeft = imgHeight
-      let position = 0
+        if (pageElement) {
+          console.log("🚀 ~ 1 handleCanvasDownload ~ pageElement:", pageElement)
+          // Create canvas from the specific page
+   
+          const canvas = await html2canvas(pageElement, {
+            scale: 2, // Higher resolution for better quality
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            width: PAGE_WIDTH,
+            height: PAGE_HEIGHT,
+            logging: false,
+            onclone: (clonedDoc) => {
+              // Ensure the cloned document has proper styling
+              const clonedElement = clonedDoc.querySelector('.pdf-page')
+              if (clonedElement) {
+                ;(clonedElement as HTMLElement).style.transform = 'scale(1)'
+              }
+            },
+          })
+          console.log("🚀 ~ 2  handleCanvasDownload ~ canvas:", canvas)
 
-      // Add first page
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-      heightLeft -= PAGE_HEIGHT
+          const imgData = canvas.toDataURL('image/png', 1.0)
 
-      // Add additional pages if needed
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight
-        pdf.addPage()
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
-        heightLeft -= PAGE_HEIGHT
+          // Add page to PDF (add new page for all except first)
+          if (pageIndex > 0) {
+            pdf.addPage()
+          }
+
+          // Add image to PDF, fitting to page size
+          pdf.addImage(imgData, 'PNG', 0, 0, PAGE_WIDTH, PAGE_HEIGHT)
+        }
       }
 
+      // Restore original transforms
+      pageElements.forEach((element, index) => {
+        const htmlElement = element as HTMLElement
+        htmlElement.style.transform = originalTransforms[index]
+      })
+
+      // Save the PDF
       pdf.save(filename)
+      console.log(
+        '🚀 ~ handleCanvasDownload ~ pageElements0000000000000:',
+        pageElements
+      )
+
     } catch (error) {
       console.error('Error generating PDF:', error)
-      // Fallback to print
-      handlePrintDownload()
+      alert('Error generating PDF. Please try again.')
+    } finally {
+      setIsDownloading(false)
     }
   }
 
@@ -381,12 +529,12 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
         dangerouslySetInnerHTML={{
           __html: `
         @media print {
-          @page { 
-            size: A4; 
-            margin: 0; 
+          @page {
+            size: A4;
+            margin: 0;
           }
           
-          body { 
+          body {
             margin: 0 !important;
             padding: 0 !important;
             background: white !important;
@@ -404,8 +552,8 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
             visibility: visible !important;
           }
           
-          .no-print { 
-            display: none !important; 
+          .no-print {
+            display: none !important;
           }
           
           .pdf-page {
@@ -422,8 +570,8 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
             background: white !important;
           }
           
-          .pdf-page:last-child { 
-            page-break-after: auto; 
+          .pdf-page:last-child {
+            page-break-after: auto;
           }
           
           /* Fix content positioning for print */
@@ -435,54 +583,44 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
         }}
       />
 
-      <div className="min-h-screen">
+      <div className="">
         {/* Download Button */}
         {enableDownload && (
           <div className="fixed top-4 right-4 z-50 no-print">
-            <div className="flex gap-2">
-              <button
-                onClick={handlePrintDownload}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2"
-                title="Print/Download as PDF"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-                Download PDF
-              </button>
-
-              {/* Alternative download button (requires html2canvas and jspdf) */}
-              <button
-                onClick={handleCanvasDownload}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2"
-                title="Generate PDF using Canvas"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                  />
-                </svg>
-                Canvas PDF
-              </button>
-            </div>
+            <button
+              onClick={handleCanvasDownload}
+              disabled={!isReady || isDownloading}
+              className={`${
+                isDownloading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700'
+              } text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2`}
+              title="Download as PDF"
+            >
+              {isDownloading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  Download PDF
+                </>
+              )}
+            </button>
           </div>
         )}
 
@@ -500,7 +638,10 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
         </div>
 
         {/* Main content */}
-        <div className="py-4 px-4 print-container print-target">
+        <div
+          ref={mainContentRef}
+          className="py-4 px-4 print-container print-target"
+        >
           <div className="flex flex-col items-center gap-4">
             {isReady &&
               [...Array(pages)].map((_, pageIndex) => (

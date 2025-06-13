@@ -1,12 +1,7 @@
 import React, { useRef } from 'react'
 import { StyleSheet } from '@react-pdf/renderer'
-// import { Biodata } from '@/lib/type'
 import Image from 'next/image'
 import { useBiodata } from '@/context/BiodataContext'
-// import { useBiodata } from '@/context/BiodataContext'
-// interface TemplateProps {
-//   biodata: Biodata
-// }
 
 // Helper function to check if a value should be displayed
 const shouldDisplay = (value: unknown): boolean => {
