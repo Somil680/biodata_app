@@ -4,6 +4,7 @@ import { useBiodata } from '@/context/BiodataContext'
 import bg from '../../../public/images/template-previews/bg.png'
 import temp1 from '../../../public/images/template-previews/template_1.jpg'
 import temp2 from '../../../public/images/template-previews/template_2.png'
+import temp3 from '../../../public/images/template-previews/temp3.webp'
 import { useBiodataSettings } from '@/hooks/useBiodataForm'
 import Image, { StaticImageData } from 'next/image'
 import A4PDFPreview from './ReacttoPrint'
@@ -27,6 +28,12 @@ const templates = [
     id: '3',
     name: 'Classic',
     thumbnail: bg,
+    description: 'A traditional layout with elegant styling',
+  },
+  {
+    id: '4',
+    name: 'Classic',
+    thumbnail: temp3,
     description: 'A traditional layout with elegant styling',
   },
 ]

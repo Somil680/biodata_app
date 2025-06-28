@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react'
 import InputField from '@/components/ui/InputField'
 import { useBiodataSettings } from '@/hooks/useBiodataForm'
-import { Image as Img, Type, Share, Lock, Plus } from 'lucide-react'
+import { Image as Img, Type, Plus } from 'lucide-react'
 import { sampleBiodata } from '@/lib/sampleData'
 import Image from 'next/image'
 import img1 from '../../../public/images/idols/ganesha.png'
@@ -12,33 +12,6 @@ import img4 from '../../../public/images/idols/om.png'
 import img5 from '../../../public/images/idols/christian.png'
 import img6 from '../../../public/images/idols/light.png'
 
-// Sample template options
-const templates = [
-  {
-    id: '1',
-    name: 'Classic',
-    thumbnail: '/templates/classic.jpg',
-    description: 'A traditional layout with elegant styling',
-  },
-  {
-    id: '2',
-    name: 'Modern',
-    thumbnail: '/templates/modern.jpg',
-    description: 'Clean and minimal design with contemporary styling',
-  },
-  {
-    id: '3',
-    name: 'Professional',
-    thumbnail: '/templates/professional.jpg',
-    description: 'Formal design ideal for career-focused individuals',
-  },
-  {
-    id: '4',
-    name: 'Elegant',
-    thumbnail: '/templates/elegant.jpg',
-    description: 'Sophisticated layout with decorative elements',
-  },
-]
 
 // Sample font options
 
