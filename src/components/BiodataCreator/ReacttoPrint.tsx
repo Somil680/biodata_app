@@ -370,16 +370,15 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
   enableDownload = true,
   filename = 'document.pdf',
 }) => {
-  console.log('🚀 ~ filename:', filename)
-  console.log('🚀 ~ enableDownload:', enableDownload)
+
   const [pages, setPages] = useState(1)
   const [scale, setScale] = useState(1)
   const [windowWidth, setWindowWidth] = useState(0)
   const [isDownloading, setIsDownloading] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
   const mainContentRef = useRef<HTMLDivElement>(null) // New ref for main content
-  const [isReady, setIsReady] = useState(false)
 
+  const [isReady, setIsReady] = useState(false)
   // A4 dimensions at 96 DPI
   const PAGE_WIDTH = 794
   const PAGE_HEIGHT = 1123
@@ -585,44 +584,7 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
 
       <div className="">
         {/* Download Button */}
-        {enableDownload && (
-          <div className="fixed top-4 right-4 z-50 no-print">
-            <button
-              onClick={handleCanvasDownload}
-              disabled={!isReady || isDownloading}
-              className={`${
-                isDownloading
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700'
-              } text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2`}
-              title="Download as PDF"
-            >
-              {isDownloading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                  Download PDF
-                </>
-              )}
-            </button>
-          </div>
-        )}
+    
 
         {/* Hidden measurement container */}
         <div
