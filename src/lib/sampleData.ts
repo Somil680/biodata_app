@@ -5,12 +5,12 @@ export const sampleBiodata: Biodata = {
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   settings: {
-    background: "../../../public/images/template-previews/template_1.jpg",
+    background: "../../../public/images/template-previews/temp1.jpg",
     idolImage: '/images/om-symbol.png',
     tagline: 'Seeking a life partner who values tradition and culture',
     templateId: '1',
     fontFamily: 'Geist',
-    primaryColor: '#D40000',
+    primaryColor: '#000',
     shareEnabled: true,
     privacySettings: {
       showContactDetails: true,

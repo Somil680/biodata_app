@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react'
 import InputField from '@/components/ui/InputField'
 import { useBiodataSettings } from '@/hooks/useBiodataForm'
-import { Image as Img, Type, Plus } from 'lucide-react'
+import { Type, Plus } from 'lucide-react'
 import { sampleBiodata } from '@/lib/sampleData'
 import Image from 'next/image'
 import img1 from '../../../public/images/idols/ganesha.png'
@@ -28,6 +28,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ onSubmit, onNext }) => {
     updateSettings,
     // uploadPhoto
   } = useBiodataSettings()
+    console.log("🚀 ~ settings:", settings)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   // For file uploads
@@ -209,7 +210,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ onSubmit, onNext }) => {
         </div>
       </div>
 
-      {/* Background Image Section */}
+      {/* Profile Image Section */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Profile Image</h3>
 
@@ -227,16 +228,14 @@ const SettingsForm: React.FC<SettingsFormProps> = ({ onSubmit, onNext }) => {
             className="w-40 h-52 border border-dashed border-gray-300 rounded-md flex items-center justify-center bg-gray-50 overflow-hidden"
             onClick={() => fileInputRef.current?.click()}
           >
-            {settings.profilePhoto ? (
+            {settings.profilePhoto && (
               <Image
                 src={settings.profilePhoto}
-                alt="Background"
+                alt=""
                 className="w-full h-full object-cover"
                 width={300}
                 height={300}
               />
-            ) : (
-              <Img className="h-6 w-6 text-gray-400" />
             )}
           </div>
 

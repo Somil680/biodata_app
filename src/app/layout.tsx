@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { BiodataProvider } from "@/context/BiodataContext";
-
+import { PreviewModalProvider } from "@/context/PreviewModalContext";
+import PreviewModal from "@/components/Model/PreviewModal";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -33,9 +34,14 @@ export default function RootLayout({
         className={`${inter.variable} ${poppins.variable} font-sans antialiased`}
       >
         <BiodataProvider>
-          {children}
+          <PreviewModalProvider>
+            {/* ... */}
+            {children}
+            <PreviewModal />
+            {/* ... */}
+          </PreviewModalProvider>
         </BiodataProvider>
       </body>
     </html>
-  );
+  )
 }

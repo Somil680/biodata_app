@@ -12,95 +12,100 @@ const shouldDisplay = (value: unknown): boolean => {
 }
 
 // Create styles
-const styles = StyleSheet.create({
-  page: {
-    // backgroundImage: '../bg.png',
-    // backgroundSize: 'cover',
-    // backgroundPosition: 'center',
-    // padding: 10,
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
-  },
-  contentRow: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  mainContent: {
-    width: '100%',
-    paddingRight: 15,
-  },
-  imageColumn: {
-    position: 'absolute',
-    right: 20,
-    top: 34,
-    width: 200,
-    height: 250,
-    // border: '2px solid #D40000',
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    paddingBottom: 5,
-    // width: 150,
-    // borderBottom: '1px solid black',
-  },
-  fieldContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    fontSize: 12,
-    marginBottom: 5,
-  },
-  fieldLabel: {
-    width: 150,
-    fontWeight: 'medium',
-    // color: '#000',
-    fontSize: 16,
-  },
-  fieldColon: {
-    width: 50,
-    fontWeight: 'medium',
-    // color: '#000',
-  },
-  fieldValue: {
-    flex: 1,
-    // color: '#111827',
-    fontSize: 16,
-  },
-  sectionContainer: {
-    marginBottom: 15,
-    position: 'relative',
-  },
-  backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    opacity: 0.1,
-    zIndex: -1,
-  },
-  idolContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap:4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  tagline: {
-    fontWeight: "semibold"
-  }
-})
 
 // The main Template component for PDF
 const Template1PDF = () => {
-  
   const { biodata } = useBiodata()
 
+  const styles = StyleSheet.create({
+    page: {
+      // backgroundImage: '../bg.png',
+      // backgroundSize: 'cover',
+      // backgroundPosition: 'center',
+      // padding: 10,
+      color: biodata.settings.primaryColor || '#000',
+      fontFamily: biodata.settings.fontFamily || 'Arial',
+    },
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 10,
+    },
+    contentRow: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    mainContent: {
+      width: '100%',
+      paddingRight: 15,
+    },
+    imageColumn: {
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      width: 100,
+      height: 150,
+      // border: '2px solid #D40000',
+    },
+    sectionTitle: {
+      fontSize: 10,
+      fontWeight: 'bold',
+      marginBottom: 5,
+      paddingBottom: 5,
+      // width: 150,
+      // borderBottom: '1px solid black',
+    },
+    fieldContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      fontSize: 7,
+      marginBottom: 2,
+    },
+    fieldLabel: {
+      width: 70,
+      fontWeight: 'medium',
+      // color: '#000',
+      fontSize: 7,
+    },
+    fieldColon: {
+      width: 10,
+      fontWeight: 'medium',
+      // color: '#000',
+    },
+    fieldValue: {
+      flex: 1,
+      // color: '#111827',
+      fontSize: 7,
+    },
+    sectionContainer: {
+      marginBottom: 15,
+      position: 'relative',
+    },
+    backgroundImage: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      opacity: 0.1,
+      zIndex: -1,
+    },
+    idolContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 4,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 16,
+    },
+    tagline: {
+      fontWeight: 'semibold',
+      fontSize: 10,
+    },
+    idolimage: {
+      width: 20,
+    },
+  })
   // Use optional chaining to handle potentially undefined values
   const personal = biodata?.personalInformation || {}
   const family = biodata?.familyInformation || {}
@@ -113,18 +118,21 @@ const Template1PDF = () => {
         id="biodata"
         ref={previewRef}
         className="bg-transparent"
-        style={{ backgroundColor: 'transparent', lineHeight: 1 }} // fallback
+        style={{
+          backgroundColor: 'transparent',
+          lineHeight: 1,
+          color: biodata.settings.primaryColor || '#000',
+          fontFamily: biodata.settings.fontFamily || 'Arial',
+        }} // fallback
       >
-        <section
-          style={styles.page}
-          className={`font-[${biodata.settings.fontFamily}] text-[${biodata.settings.primaryColor}]`}
-        >
+        <section style={styles.page}>
           <section style={styles.container}>
             <section style={styles.idolContainer}>
               <Image
-                alt="Profile"
-                width={60}
-                height={6}
+                alt="idol"
+                width={200}
+                height={20}
+                style={styles.idolimage}
                 src={biodata.settings.idolImage || ''} // Use the correct path to your image or fallback
                 // style={styles.imageColumn}
               />
@@ -348,16 +356,17 @@ const Template1PDF = () => {
                   </div>
                 )}
               </div>
-
-              <div style={styles.imageColumn}>
-                <Image
-                  alt="Profile"
-                  width={200}
-                  height={250}
-                  src={biodata.settings.profilePhoto || ''} // Use the correct path to your image or fallback
-                  // style={styles.imageColumn}
-                />
-              </div>
+              {biodata.settings.profilePhoto &&
+                biodata.settings.profilePhoto.trim() !== '' && (
+                  <div style={styles.imageColumn}>
+                    <Image
+                      alt=""
+                      width={100}
+                      height={150}
+                      src={biodata.settings.profilePhoto}
+                    />
+                  </div>
+                )}
             </section>
 
             {/* Family Information Section */}

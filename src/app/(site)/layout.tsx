@@ -1,7 +1,8 @@
 'use client'
 
-import Navbar from "@/components/Homepage/Navbar"
-import Footer from "@/components/Homepage/Footer"
+import Navbar from '@/components/Homepage/Navbar'
+import Footer from '@/components/Homepage/Footer'
+import PreviewModal from '@/components/Model/PreviewModal'
 
 export default function SiteLayout({
   children,
@@ -14,10 +15,11 @@ export default function SiteLayout({
       <div className="fixed inset-0 -z-50 bg-white bg-opacity-60">
         <div className="absolute inset-0 bg-[url('/patterns/subtle-dots.svg')] bg-repeat opacity-5"></div>
       </div>
-      
+
       <Navbar />
       <main className="flex-1">
-        {children}
+          {children}
+      <PreviewModal />
       </main>
       <Footer />
     </div>

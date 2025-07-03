@@ -201,29 +201,6 @@ const FamilyInfoForm: React.FC<FamilyInfoFormProps> = ({  onSubmit, onNext }) =>
     }
   };
 
-  // const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   const numValue = value === '' ? 0 : parseInt(value);
-  //   updateFamilyInfo({ [name]: numValue });
-  // };
-
-  // // Add/update/remove family members
-  // const updateFamilyMember = (type: 'siblings' | 'uncles' | 'aunts') => (index: number, field: string, value: string | number) => {
-  //   const members = [...(familyInfo[type] || [])];
-  //   members[index] = { ...members[index], [field]: value };
-  //   updateFamilyInfo({ [type]: members });
-  // };
-
-  // const addFamilyMember = (type: 'siblings' | 'uncles' | 'aunts') => () => {
-  //   const members = [...(familyInfo[type] || []), { name: '' }];
-  //   updateFamilyInfo({ [type]: members });
-  // };
-
-  // const removeFamilyMember = (type: 'siblings' | 'uncles' | 'aunts') => (index: number) => {
-  //   const members = [...(familyInfo[type] || [])];
-  //   members.splice(index, 1);
-  //   updateFamilyInfo({ [type]: members });
-  // };
 
   // Handle custom family members
   const addCustomMember = () => {

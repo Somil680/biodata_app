@@ -82,3 +82,28 @@ export function calculateAge(dateOfBirth: string): number {
     return 0;
   }
 }
+
+//  Image converter to base64
+export const toBase64 = async (url: string): Promise<string> => {
+  try {
+    const res = await fetch(url)
+    if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`)
+
+    const blob = await res.blob()
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        if (reader.result) {
+          resolve(reader.result as string)
+        } else {
+          reject('Reader result is null')
+        }
+      }
+      reader.onerror = () => reject(reader.error)
+      reader.readAsDataURL(blob)
+    })
+  } catch (err) {
+    console.error('🚨 Failed to convert image to base64:', err)
+    return ''
+  }
+}

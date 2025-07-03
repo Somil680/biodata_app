@@ -1,5 +1,7 @@
 // src/types/biodata.ts
 
+import { StaticImageData } from "next/image";
+
 // Personal Information types
 export interface PersonalInformation {
     fullName: string;
@@ -46,31 +48,12 @@ export interface CustomFamilyMember {
 }
 
 export interface FamilyInformation {
-    // fatherName: string;
-    // fatherOccupation?: string;
-    // motherName: string;
-    // motherOccupation?: string;
-    // brothers?: number;
-    // brothersMarried?: number;
-    // sisters?: number;
-    // sistersMarried?: number;
-    // brotherName?: string;
-    // sisterName?: string;
     familyType?: string;
     familyValues?: string;
     familyStatus?: string;
     familyBackground?: string;
     nativePlace?: string;
     aboutFamily?: string;
-    // dada?: string;
-    // tauji?: string;
-    // nanaji?: string;
-    // fufa?: string;
-    // mama?: string;
-    // chacha?: string;
-    // siblings?: FamilyMember[];
-    // uncles?: FamilyMember[];
-    // aunts?: FamilyMember[];
     customMembers?: CustomFamilyMember[];
 }
 
@@ -101,24 +84,44 @@ export interface PartnerPreferences {
     additionalPreferences?: string;
 }
 
+
+
+// Template settings
+export interface TemplateSettings {
+  id: number // Unique identifier for the template
+  background: StaticImageData // URL or path to the thumbnail image
+  left: number // Left margin in pixels
+  right: number // Right margin in pixels
+  top: number // Top margin in pixels
+  bottom: number // Bottom margin in pixels
+}
+
+
 // Biodata settings
 export interface BiodataSettings {
-    id?: string; // Added the 'id' property
-    idolImage?: string;
-    tagline?: string;
-    background?: string;
-    profilePhoto?: string;
-    displayPreferences?: string[];
-    templateId?: string;
-    fontFamily?: string;
-    primaryColor?: string;
-    shareEnabled?: boolean;
-    privacySettings?: {
-        showContactDetails?: boolean;
-        showEmail?: boolean;
-        showAddress?: boolean;
-        showIncome?: boolean;
-    };
+  id?: string // Added the 'id' property
+  idolImage?: string
+  tagline?: string
+  background?: string
+  profilePhoto?: string
+  displayPreferences?: string[]
+  template?: {
+    id: number // Unique identifier for the template
+    background: string // URL or path to the thumbnail image
+    left: number // Left margin in pixels
+    right: number // Right margin in pixels
+    top: number // Top margin in pixels
+    bottom: number // Bottom margin in pixels
+  }
+  fontFamily?: string
+  primaryColor?: string
+  shareEnabled?: boolean
+  privacySettings?: {
+    showContactDetails?: boolean
+    showEmail?: boolean
+    showAddress?: boolean
+    showIncome?: boolean
+  }
 }
 
 // Complete Biodata type
