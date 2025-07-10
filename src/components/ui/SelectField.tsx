@@ -69,7 +69,7 @@ const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
           >
             <option value="">Select an option</option>
             {options.map((option) => (
-              <option key={option.value} value={option.value}>
+              <option key={option.value} value={option.value}  style={{ fontFamily: option.value }}>
                 {option.label}
               </option>
             ))}

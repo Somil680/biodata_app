@@ -14,6 +14,9 @@ import html2canvas from 'html2canvas-pro'
 import jsPDF from 'jspdf'
 import { StaticImageData } from 'next/image'
 import { toBase64 } from '@/lib/utils'
+import { db } from '@/lib/db'
+import { templates } from '@/components/templates/templates'
+console.log("🚀 ~ templates:", templates)
 // import { templates } from '@/components/templates/templates'
 
 // Action Types
@@ -170,13 +173,11 @@ export const initialSettings: BiodataSettings = {
   profilePhoto: '',
   displayPreferences: [],
   template: {
-    id: 0,
-    background: '',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  } ,
+    id: templates[12].id,
+    background: (templates[12].background as StaticImageData).src, // Default to first template
+    width: templates[12].width,
+    height: templates[12].height,
+  },
   fontFamily: 'Geist',
   primaryColor: '#000000',
   shareEnabled: false,
@@ -222,7 +223,6 @@ export const biodataReducer = (
   state: Biodata,
   action: BiodataAction
 ): Biodata => {
-  console.log('🚀 ~ biodataReducer ~ ction.type:', action.type)
   switch (action.type) {
     case BiodataActionTypes.UPDATE_PERSONAL_INFO:
       return {
@@ -322,32 +322,27 @@ export const BiodataProvider: React.FC<BiodataProviderProps> = ({
   const [biodata, dispatch] = useReducer(biodataReducer, initialBiodata)
   const [isDownloading, setIsDownloading] = React.useState(false)
 
-  // Load biodata from localStorage on initial load
+  // Load biodata from Dexie on initial load
   React.useEffect(() => {
-    const savedBiodata = localStorage.getItem('biodata')
-    if (savedBiodata) {
-      try {
-        const parsedBiodata = JSON.parse(savedBiodata)
+    db.biodata.get(initialBiodata.id).then((savedBiodata) => {
+      if (savedBiodata) {
         dispatch({
           type: BiodataActionTypes.LOAD_BIODATA,
-          payload: parsedBiodata,
+          payload: savedBiodata,
         })
-      } catch (error) {
-        console.error('Failed to parse saved biodata:', error)
       }
-    }
+    })
   }, [])
 
-  // Save biodata to localStorage whenever it changes
+  // Save biodata to Dexie whenever it changes
   React.useEffect(() => {
-    localStorage.setItem('biodata', JSON.stringify(biodata))
+    db.biodata.put(biodata)
   }, [biodata])
 
   // Function to save biodata (in a real app, this would make an API call)
   const saveBiodata = async (): Promise<void> => {
     try {
-      // In a real app, you would save to your backend here
-      localStorage.setItem('biodata', JSON.stringify(biodata))
+      await db.biodata.put(biodata)
       console.log('Biodata saved successfully')
       return Promise.resolve()
     } catch (error) {
@@ -372,6 +367,7 @@ export const BiodataProvider: React.FC<BiodataProviderProps> = ({
         scale,
         useCORS: true,
         backgroundColor: null,
+
       })
 
       // Background image base64
@@ -402,10 +398,10 @@ export const BiodataProvider: React.FC<BiodataProviderProps> = ({
       const pdfHeightPx = pdfHeightMM * mmToPx
 
       // === CUSTOMIZABLE PADDING (IN MM) ===
-      const paddingTopMM = biodata.settings.template?.top ?? 0
-      const paddingBottomMM = biodata.settings.template?.bottom ?? 0
-      const paddingLeftMM = biodata.settings.template?.left ?? 0
-      const paddingRightMM = biodata.settings.template?.right ?? 0
+      const paddingTopMM =  10 // 0mm padding for top
+      const paddingBottomMM = 10 // 0mm padding for top? 0
+      const paddingLeftMM =  10 // 0mm padding for top0
+      const paddingRightMM =10 // 0mm padding for top 01
 
       const paddingTopPx = paddingTopMM * mmToPx
       const paddingBottomPx = paddingBottomMM * mmToPx
@@ -422,8 +418,6 @@ export const BiodataProvider: React.FC<BiodataProviderProps> = ({
         sliceCanvas.height = pdfHeightPx
 
         const ctx = sliceCanvas.getContext('2d')!
-        // ctx.fillStyle = '#ffffff'
-        // ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height)
 
         // Draw the portion of fullCanvas into this slice with vertical offset
         ctx.drawImage(
@@ -432,13 +426,14 @@ export const BiodataProvider: React.FC<BiodataProviderProps> = ({
           i * usableHeightPx, // source crop
           fullCanvas.width,
           usableHeightPx,
-          paddingLeftPx,
+          paddingLeftPx, // destination start
           paddingTopPx, // destination start
           fullCanvas.width - paddingLeftPx - paddingRightPx,
           usableHeightPx
         )
 
         const sliceImage = sliceCanvas.toDataURL('image/png')
+        console.log("🚀 ~ exportAsPDF ~ sliceImage:", sliceImage)
 
         if (i > 0) pdf.addPage()
 

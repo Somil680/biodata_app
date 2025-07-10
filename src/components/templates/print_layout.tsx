@@ -14,10 +14,11 @@ const shouldDisplay = (value: unknown): boolean => {
 // Create styles
 
 // The main Template component for PDF
-const Template1PDF = ({}) => {
+const Template1PDF = ({
+  heading_font_size , content_font_size
+}) => {
   const { biodata } = useBiodata()
-  const contentFontSize = 16
-  const headingFontSize = 24
+
   const styles = StyleSheet.create({
     page: {
       color: biodata.settings.primaryColor || '#000',
@@ -26,6 +27,7 @@ const Template1PDF = ({}) => {
     container: {
       display: 'flex',
       flexDirection: 'column',
+      gap: 10,
     },
     contentRow: {
       display: 'flex',
@@ -39,11 +41,11 @@ const Template1PDF = ({}) => {
       position: 'absolute',
       right: 0,
       top: 0,
-      width: 200,
-      height: 250,
+      width: 100,
+      height: 150,
     },
     sectionTitle: {
-      fontSize: headingFontSize,
+      fontSize: 10,
       fontWeight: 'bold',
       marginBottom: 5,
       paddingBottom: 5,
@@ -51,15 +53,13 @@ const Template1PDF = ({}) => {
     fieldContainer: {
       display: 'flex',
       flexDirection: 'row',
-      fontSize: contentFontSize,
+      fontSize: 7,
       marginBottom: 2,
-      lineHeight: 1.5,
     },
     fieldLabel: {
-      width: 130,
+      width: 70,
       fontWeight: 'medium',
-      fontSize: contentFontSize,
-      lineHeight: 1.5,
+      fontSize: 7,
     },
     fieldColon: {
       width: 10,
@@ -67,8 +67,7 @@ const Template1PDF = ({}) => {
     },
     fieldValue: {
       flex: 1,
-      fontSize: contentFontSize,
-      lineHeight: 1.5,
+      fontSize: 7,
     },
     sectionContainer: {
       marginBottom: 15,
@@ -93,10 +92,10 @@ const Template1PDF = ({}) => {
     },
     tagline: {
       fontWeight: 'semibold',
-      fontSize: 15,
+      fontSize: 10,
     },
     idolimage: {
-      width: 40,
+      width: 20,
     },
   })
   // Use optional chaining to handle potentially undefined values
@@ -113,6 +112,7 @@ const Template1PDF = ({}) => {
         className="bg-transparent"
         style={{
           backgroundColor: 'transparent',
+          lineHeight: 1,
           color: biodata.settings.primaryColor || '#000',
           fontFamily: biodata.settings.fontFamily || 'Arial',
         }} // fallback
@@ -128,223 +128,223 @@ const Template1PDF = ({}) => {
                 src={biodata.settings.idolImage || ''} // Use the correct path to your image or fallback
                 // style={styles.imageColumn}
               />
-              <span style={styles.tagline}>{biodata.settings.tagline}</span>
+              <p style={styles.tagline}>{biodata.settings.tagline}</p>
             </section>
 
             {/* Personal Information Section */}
             <section style={styles.sectionContainer}>
               <div>
-                <span style={styles.sectionTitle}>Personal Information</span>
+                <p style={styles.sectionTitle}>Personal Information</p>
 
                 {shouldDisplay(personal.fullName) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Full Name</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.fullName)}</span>
+                    <p style={styles.fieldLabel}>Full Name</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.fullName)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.dateOfBirth) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Date of Birth</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Date of Birth</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(personal.dateOfBirth)}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.age) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Age</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.age)}</span>
+                    <p style={styles.fieldLabel}>Age</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.age)}</p>
                   </div>
                 )}
                 {shouldDisplay(personal.timeOfBirth) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Time of Birth</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Time of Birth</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(personal.timeOfBirth)}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.placeOfBirth) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Place of Birth</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Place of Birth</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(personal.placeOfBirth)}
-                    </span>
+                    </p>
                   </div>
                 )}
                 {shouldDisplay(personal.height) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Height</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.height)}</span>
+                    <p style={styles.fieldLabel}>Height</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.height)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.weight) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Weight</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.weight)}</span>
+                    <p style={styles.fieldLabel}>Weight</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.weight)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.bloodGroup) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Blood Group</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Blood Group</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(personal.bloodGroup)}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.maritalStatus) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Marital Status</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Marital Status</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(personal.maritalStatus)}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.religion) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Religion</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.religion)}</span>
+                    <p style={styles.fieldLabel}>Religion</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.religion)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.education) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Education</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Education</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(personal.education)}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.profession) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Profession</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Profession</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(personal.profession)}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.annualIncome) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Annual Income</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Annual Income</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(personal.annualIncome)}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.caste) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Caste</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.caste)}</span>
+                    <p style={styles.fieldLabel}>Caste</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.caste)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.subCaste) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Sub-Caste</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.subCaste)}</span>
+                    <p style={styles.fieldLabel}>Sub-Caste</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.subCaste)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.gothra) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Gothra</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.gothra)}</span>
+                    <p style={styles.fieldLabel}>Gothra</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.gothra)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.rashi) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Rashi</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.rashi)}</span>
+                    <p style={styles.fieldLabel}>Rashi</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.rashi)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.nakshatra) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Nakshatra</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Nakshatra</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(personal.nakshatra)}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.manglik) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Manglik</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.manglik)}</span>
+                    <p style={styles.fieldLabel}>Manglik</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.manglik)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.diet) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Diet</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.diet)}</span>
+                    <p style={styles.fieldLabel}>Diet</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.diet)}</p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.hobbies) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Hobbies</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Hobbies</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(
                         Array.isArray(personal.hobbies)
                           ? personal.hobbies.join(', ')
                           : personal.hobbies
                       )}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.languages) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>Languages</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>
+                    <p style={styles.fieldLabel}>Languages</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>
                       {String(
                         Array.isArray(personal.languages)
                           ? personal.languages.join(', ')
                           : personal.languages
                       )}
-                    </span>
+                    </p>
                   </div>
                 )}
 
                 {shouldDisplay(personal.aboutMe) && (
                   <div style={styles.fieldContainer}>
-                    <span style={styles.fieldLabel}>About Me</span>
-                    <span style={styles.fieldColon}>:</span>
-                    <span style={styles.fieldValue}>{String(personal.aboutMe)}</span>
+                    <p style={styles.fieldLabel}>About Me</p>
+                    <p style={styles.fieldColon}>:</p>
+                    <p style={styles.fieldValue}>{String(personal.aboutMe)}</p>
                   </div>
                 )}
               </div>
@@ -353,9 +353,8 @@ const Template1PDF = ({}) => {
                   <div style={styles.imageColumn}>
                     <Image
                       alt=""
-                      width={200}
-                    height={250}
-                    quality={100}
+                      width={100}
+                      height={150}
                       src={biodata.settings.profilePhoto}
                     />
                   </div>
@@ -364,45 +363,45 @@ const Template1PDF = ({}) => {
 
             {/* Family Information Section */}
             <section style={styles.sectionContainer}>
-              <span style={styles.sectionTitle}>Family Information</span>
+              <p style={styles.sectionTitle}>Family Information</p>
 
               {shouldDisplay(family.familyType) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Family Type</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(family.familyType)}</span>
+                  <p style={styles.fieldLabel}>Family Type</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(family.familyType)}</p>
                 </div>
               )}
 
               {shouldDisplay(family.familyValues) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Family Values</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(family.familyValues)}</span>
+                  <p style={styles.fieldLabel}>Family Values</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(family.familyValues)}</p>
                 </div>
               )}
 
               {shouldDisplay(family.familyStatus) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Family Status</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(family.familyStatus)}</span>
+                  <p style={styles.fieldLabel}>Family Status</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(family.familyStatus)}</p>
                 </div>
               )}
 
               {shouldDisplay(family.nativePlace) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Native Place</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(family.nativePlace)}</span>
+                  <p style={styles.fieldLabel}>Native Place</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(family.nativePlace)}</p>
                 </div>
               )}
 
               {shouldDisplay(family.aboutFamily) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>About Family</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(family.aboutFamily)}</span>
+                  <p style={styles.fieldLabel}>About Family</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(family.aboutFamily)}</p>
                 </div>
               )}
 
@@ -415,13 +414,13 @@ const Template1PDF = ({}) => {
                       key={`${member.id || index}-${index}`}
                       style={styles.fieldContainer}
                     >
-                      <span style={styles.fieldLabel}>{String(member.relation)}</span>
-                      <span style={styles.fieldColon}>:</span>
+                      <p style={styles.fieldLabel}>{String(member.relation)}</p>
+                      <p style={styles.fieldColon}>:</p>
                       <div style={styles.fieldValue}>
                         {member.details
                           .split('\n')
                           .map((line, lineIndex) =>
-                            line.trim() ? <div key={lineIndex}>{line}</div> : null
+                            line.trim() ? <p key={lineIndex}>{line}</p> : null
                           )}
                       </div>
                     </div>
@@ -431,73 +430,73 @@ const Template1PDF = ({}) => {
 
             {/* Contact Information Section */}
             <section style={styles.sectionContainer}>
-              <span style={styles.sectionTitle}>Contact Information</span>
+              <p style={styles.sectionTitle}>Contact Information</p>
 
               {shouldDisplay(contact.mobileNumber) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Mobile Number</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>
+                  <p style={styles.fieldLabel}>Mobile Number</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>
                     {String(contact.mobileNumber)}
-                  </span>
+                  </p>
                 </div>
               )}
 
               {shouldDisplay(contact.alternateNumber) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Alternate Number</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>
+                  <p style={styles.fieldLabel}>Alternate Number</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>
                     {String(contact.alternateNumber)}
-                  </span>
+                  </p>
                 </div>
               )}
 
               {shouldDisplay(contact.email) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Email</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(contact.email)}</span>
+                  <p style={styles.fieldLabel}>Email</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(contact.email)}</p>
                 </div>
               )}
 
               {shouldDisplay(contact.address) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Address</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(contact.address)}</span>
+                  <p style={styles.fieldLabel}>Address</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(contact.address)}</p>
                 </div>
               )}
 
               {shouldDisplay(contact.city) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>City</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(contact.city)}</span>
+                  <p style={styles.fieldLabel}>City</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(contact.city)}</p>
                 </div>
               )}
 
               {shouldDisplay(contact.state) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>State</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(contact.state)}</span>
+                  <p style={styles.fieldLabel}>State</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(contact.state)}</p>
                 </div>
               )}
 
               {shouldDisplay(contact.country) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Country</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(contact.country)}</span>
+                  <p style={styles.fieldLabel}>Country</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(contact.country)}</p>
                 </div>
               )}
 
               {shouldDisplay(contact.pincode) && (
                 <div style={styles.fieldContainer}>
-                  <span style={styles.fieldLabel}>Pincode</span>
-                  <span style={styles.fieldColon}>:</span>
-                  <span style={styles.fieldValue}>{String(contact.pincode)}</span>
+                  <p style={styles.fieldLabel}>Pincode</p>
+                  <p style={styles.fieldColon}>:</p>
+                  <p style={styles.fieldValue}>{String(contact.pincode)}</p>
                 </div>
               )}
             </section>

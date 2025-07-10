@@ -8,7 +8,6 @@ export const sampleBiodata: Biodata = {
     background: "../../../public/images/template-previews/temp1.jpg",
     idolImage: '/images/om-symbol.png',
     tagline: 'Seeking a life partner who values tradition and culture',
-    templateId: '1',
     fontFamily: 'Geist',
     primaryColor: '#000',
     shareEnabled: true,

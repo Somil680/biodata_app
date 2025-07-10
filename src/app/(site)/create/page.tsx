@@ -8,7 +8,7 @@ import BiodataCreator from '@/components/BiodataCreator';
 
 export default function CreateBiodataPage() {
   return (
-    <div className="relative py-16 md:py-20 overflow-hidden">
+    <div className="relative py-10 md:py-20 overflow-hidden ">
       {/* Animated background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-orange-50 -z-10"></div>
       
@@ -24,7 +24,7 @@ export default function CreateBiodataPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-6 sm:mb-12"
         >
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Create Your Biodata</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">

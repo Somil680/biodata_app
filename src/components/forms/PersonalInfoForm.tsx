@@ -1,29 +1,29 @@
 // src/components/forms/PersonalInfoForm.tsx
-import React, { useState, useEffect } from 'react';
-import { format, parse } from 'date-fns';
-import InputField from '@/components/ui/InputField';
-import SelectField from '@/components/ui/SelectField';
-import { usePersonalInfoForm } from '@/hooks/useBiodataForm';
-import { 
-  User, 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  Ruler, 
+import React, { useState, useEffect } from 'react'
+import { format, parse } from 'date-fns'
+import InputField from '@/components/ui/InputField'
+import SelectField from '@/components/ui/SelectField'
+import { usePersonalInfoForm } from '@/hooks/useBiodataForm'
+import {
+  User,
+  Calendar,
+  Clock,
+  MapPin,
+  Ruler,
   Heart,
   Activity,
   Briefcase,
   GraduationCap,
-  DollarSign
-} from 'lucide-react';
-import { sampleBiodata } from '@/lib/sampleData';
+  DollarSign,
+} from 'lucide-react'
+// import { sampleBiodata } from '@/lib/sampleData'
 
 const maritalStatusOptions = [
   { value: 'never_married', label: 'Never Married' },
   { value: 'divorced', label: 'Divorced' },
   { value: 'widowed', label: 'Widowed' },
   { value: 'awaiting_divorce', label: 'Awaiting Divorce' },
-];
+]
 
 const religionOptions = [
   { value: 'hindu', label: 'Hindu' },
@@ -35,7 +35,7 @@ const religionOptions = [
   { value: 'parsi', label: 'Parsi' },
   { value: 'jewish', label: 'Jewish' },
   { value: 'other', label: 'Other' },
-];
+]
 
 const dietOptions = [
   { value: 'vegetarian', label: 'Vegetarian' },
@@ -43,7 +43,7 @@ const dietOptions = [
   { value: 'eggetarian', label: 'Eggetarian' },
   { value: 'vegan', label: 'Vegan' },
   { value: 'jain', label: 'Jain' },
-];
+]
 
 const bloodGroupOptions = [
   { value: 'a_positive', label: 'A+' },
@@ -54,7 +54,7 @@ const bloodGroupOptions = [
   { value: 'ab_negative', label: 'AB-' },
   { value: 'o_positive', label: 'O+' },
   { value: 'o_negative', label: 'O-' },
-];
+]
 
 const rashiOptions = [
   { value: 'aries', label: 'Aries (Mesha)' },
@@ -69,198 +69,169 @@ const rashiOptions = [
   { value: 'capricorn', label: 'Capricorn (Makara)' },
   { value: 'aquarius', label: 'Aquarius (Kumbha)' },
   { value: 'pisces', label: 'Pisces (Meena)' },
-];
+]
 
 const manglikOptions = [
   { value: 'yes', label: 'Yes' },
   { value: 'no', label: 'No' },
   { value: 'anshik', label: 'Anshik' },
   { value: 'dont_know', label: "Don't Know" },
-];
+]
 
-interface PersonalInfoFormProps {
-  initialValues?: any;
-  onSubmit?: (values: any) => void;
-  onNext?: () => void;
-}
-
-const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSubmit, onNext }) => {
-  const { personalInfo, updatePersonalInfo } = usePersonalInfoForm();
-  const [errors, setErrors] = useState<Record<string, string>>({});
+const PersonalInfoForm: React.FC = () => {
+  const { personalInfo, updatePersonalInfo } = usePersonalInfoForm()
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   // Format the date value to yyyy-MM-dd for the input field
   const formatDateForInput = (dateString: string | undefined): string => {
-    if (!dateString) return '';
-    
+    if (!dateString) return ''
+
     try {
       // Check if the date is already in the correct format
       if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-        return dateString;
+        return dateString
       }
-      
+
       // Try to parse non-standard formats like "MM/dd/yyyy"
-      const parsedDate = parse(dateString, 'MM/dd/yyyy', new Date());
+      const parsedDate = parse(dateString, 'MM/dd/yyyy', new Date())
       if (isNaN(parsedDate.getTime())) {
-        return '';
+        return ''
       }
-      
-      return format(parsedDate, 'yyyy-MM-dd');
+
+      return format(parsedDate, 'yyyy-MM-dd')
     } catch (error) {
-      console.error('Error formatting date:', error);
-      return '';
+      console.error('Error formatting date:', error)
+      return ''
     }
-  };
+  }
 
   // Format time value to 24-hour format (HH:mm)
   const formatTimeForInput = (timeString: string | undefined): string => {
-    if (!timeString) return '';
-    
+    if (!timeString) return ''
+
     try {
       // Check if it's already in the correct 24-hour format
       if (/^\d{2}:\d{2}$/.test(timeString)) {
-        return timeString;
+        return timeString
       }
-      
+
       // Try to parse 12-hour format with AM/PM
       if (/^\d{1,2}:\d{2}\s?[APap][Mm]$/.test(timeString)) {
-        const [timePart, amPm] = timeString.split(/\s/);
-        const [hours, minutes] = timePart.split(':').map(Number);
-        
-        let hour24 = hours;
+        const [timePart, amPm] = timeString.split(/\s/)
+        const [hours, minutes] = timePart.split(':').map(Number)
+
+        let hour24 = hours
         if (amPm.toLowerCase() === 'pm' && hours < 12) {
-          hour24 = hours + 12;
+          hour24 = hours + 12
         } else if (amPm.toLowerCase() === 'am' && hours === 12) {
-          hour24 = 0;
+          hour24 = 0
         }
-        
-        return `${hour24.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+
+        return `${hour24.toString().padStart(2, '0')}:${minutes
+          .toString()
+          .padStart(2, '0')}`
       }
-      
-      return '';
+
+      return ''
     } catch (error) {
-      console.error('Error formatting time:', error);
-      return '';
+      console.error('Error formatting time:', error)
+      return ''
     }
-  };
+  }
 
   // Calculate age based on date of birth
   useEffect(() => {
     if (personalInfo.dateOfBirth) {
-      const birthDate = new Date(personalInfo.dateOfBirth);
+      const birthDate = new Date(personalInfo.dateOfBirth)
       if (!isNaN(birthDate.getTime())) {
-      const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-      }
-      
-      updatePersonalInfo({ age });
+        const today = new Date()
+        let age = today.getFullYear() - birthDate.getFullYear()
+        const m = today.getMonth() - birthDate.getMonth()
+
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--
+        }
+
+        updatePersonalInfo({ age })
       }
     }
-  }, [personalInfo.dateOfBirth, updatePersonalInfo]);
+  }, [personalInfo.dateOfBirth, updatePersonalInfo])
 
   // Function to populate form with sample data
-  const fillWithSampleData = () => {
-    const sampleData = sampleBiodata.personalInformation;
-    updatePersonalInfo(sampleData);
-    setErrors({});
-  };
+  // const fillWithSampleData = () => {
+  //   const sampleData = sampleBiodata.personalInformation
+  //   updatePersonalInfo(sampleData)
+  //   setErrors({})
+  // }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    
+    const { name, value } = e.target
+
     // Handle age field specifically to ensure it's properly converted to a number
     if (name === 'age') {
-      const ageValue = value === '' ? undefined : parseInt(value, 10);
-      updatePersonalInfo({ [name]: ageValue });
+      const ageValue = value === '' ? undefined : parseInt(value, 10)
+      updatePersonalInfo({ [name]: ageValue })
     } else {
-    updatePersonalInfo({ [name]: value });
+      updatePersonalInfo({ [name]: value })
     }
-    
+
     // Clear errors when user starts typing
     if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
+      setErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[name]
+        return newErrors
+      })
     }
-  };
+  }
 
   const handleSelectChange = (name: string) => (value: string) => {
-    updatePersonalInfo({ [name]: value });
-    
+    updatePersonalInfo({ [name]: value })
+
     // Clear errors
     if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
+      setErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[name]
+        return newErrors
+      })
     }
-  };
+  }
 
   const handleHobbiesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const hobbies = value.split(',').map(hobby => hobby.trim());
-    updatePersonalInfo({ hobbies });
-  };
+    const value = e.target.value
+    const hobbies = value.split(',').map((hobby) => hobby.trim())
+    updatePersonalInfo({ hobbies })
+  }
 
   const handleLanguagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const languages = value.split(',').map(language => language.trim());
-    updatePersonalInfo({ languages });
-  };
+    const value = e.target.value
+    const languages = value.split(',').map((language) => language.trim())
+    updatePersonalInfo({ languages })
+  }
 
-//   const validateField = (name: string, value: string): string => {
-//     if (!value) {
-//       return 'This field is required';
-//     }
-//     return '';
-//   };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validate required fields
-    const requiredFields = ['fullName', 'dateOfBirth', 'height', 'maritalStatus', 'religion', 'education', 'profession', 'annualIncome'];
-    const newErrors: Record<string, string> = {};
-    
-    requiredFields.forEach(field => {
-      if (!personalInfo[field as keyof typeof personalInfo]) {
-        newErrors[field] = 'This field is required';
-      }
-    });
-    
-    if (Object.keys(newErrors).length === 0) {
-      // Proceed to the next step if validation passes
-      console.log('Personal information saved');
-      if (onSubmit) {
-        onSubmit(personalInfo);
-      }
-      if (onNext) {
-        onNext();
-      }
-    } else {
-      setErrors(newErrors);
-    }
-  };
+  //   const validateField = (name: string, value: string): string => {
+  //     if (!value) {
+  //       return 'This field is required';
+  //     }
+  //     return '';
+  //   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-      <h2 className="text-2xl font-bold text-gray-800">Personal Information</h2>
-        <button
+        <h2 className="text-2xl font-bold text-gray-800">
+          Personal Information
+        </h2>
+        {/* <button
           type="button"
           onClick={fillWithSampleData}
           className="text-sm px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
         >
           Fill with sample data
-        </button>
+        </button> */}
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
         <InputField
           id="fullName"
@@ -273,7 +244,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<User className="h-5 w-5 text-gray-400" />}
           error={errors.fullName}
         />
-        
+
         <InputField
           id="dateOfBirth"
           name="dateOfBirth"
@@ -285,7 +256,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Calendar className="h-5 w-5 text-gray-400" />}
           error={errors.dateOfBirth}
         />
-        
+
         <InputField
           id="timeOfBirth"
           name="timeOfBirth"
@@ -296,7 +267,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Clock className="h-5 w-5 text-gray-400" />}
           error={errors.timeOfBirth}
         />
-        
+
         <InputField
           id="placeOfBirth"
           name="placeOfBirth"
@@ -307,7 +278,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<MapPin className="h-5 w-5 text-gray-400" />}
           error={errors.placeOfBirth}
         />
-        
+
         <InputField
           id="age"
           name="age"
@@ -324,14 +295,14 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           id="height"
           name="height"
           label="Height"
-          placeholder={"e.g. 5'10\""}
+          placeholder={'e.g. 5\'10"'}
           value={personalInfo.height}
           onChange={handleInputChange}
           required
           icon={<Ruler className="h-5 w-5 text-gray-400" />}
           error={errors.height}
         />
-        
+
         <InputField
           id="weight"
           name="weight"
@@ -342,7 +313,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Activity className="h-5 w-5 text-gray-400" />}
           error={errors.weight}
         />
-        
+
         <SelectField
           id="bloodGroup"
           name="bloodGroup"
@@ -353,7 +324,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Activity className="h-5 w-5 text-gray-400" />}
           error={errors.bloodGroup}
         />
-        
+
         <SelectField
           id="maritalStatus"
           name="maritalStatus"
@@ -365,7 +336,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Heart className="h-5 w-5 text-gray-400" />}
           error={errors.maritalStatus}
         />
-        
+
         <SelectField
           id="religion"
           name="religion"
@@ -377,7 +348,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Heart className="h-5 w-5 text-gray-400" />}
           error={errors.religion}
         />
-        
+
         <InputField
           id="caste"
           name="caste"
@@ -388,7 +359,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Heart className="h-5 w-5 text-gray-400" />}
           error={errors.caste}
         />
-        
+
         <InputField
           id="subCaste"
           name="subCaste"
@@ -399,7 +370,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Heart className="h-5 w-5 text-gray-400" />}
           error={errors.subCaste}
         />
-        
+
         <InputField
           id="gothra"
           name="gothra"
@@ -410,7 +381,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Heart className="h-5 w-5 text-gray-400" />}
           error={errors.gothra}
         />
-        
+
         <SelectField
           id="rashi"
           name="rashi"
@@ -421,7 +392,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Heart className="h-5 w-5 text-gray-400" />}
           error={errors.rashi}
         />
-        
+
         <InputField
           id="nakshatra"
           name="nakshatra"
@@ -432,7 +403,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Heart className="h-5 w-5 text-gray-400" />}
           error={errors.nakshatra}
         />
-        
+
         <SelectField
           id="manglik"
           name="manglik"
@@ -443,7 +414,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Heart className="h-5 w-5 text-gray-400" />}
           error={errors.manglik}
         />
-        
+
         <InputField
           id="education"
           name="education"
@@ -455,7 +426,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<GraduationCap className="h-5 w-5 text-gray-400" />}
           error={errors.education}
         />
-        
+
         <InputField
           id="profession"
           name="profession"
@@ -467,7 +438,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<Briefcase className="h-5 w-5 text-gray-400" />}
           error={errors.profession}
         />
-        
+
         <InputField
           id="annualIncome"
           name="annualIncome"
@@ -479,7 +450,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           icon={<DollarSign className="h-5 w-5 text-gray-400" />}
           error={errors.annualIncome}
         />
-        
+
         <SelectField
           id="diet"
           name="diet"
@@ -491,7 +462,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           error={errors.diet}
         />
       </div>
-      
+
       <div className="space-y-4">
         <InputField
           id="hobbies"
@@ -502,7 +473,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           onChange={handleHobbiesChange}
           error={errors.hobbies}
         />
-        
+
         <InputField
           id="languages"
           name="languages"
@@ -512,9 +483,12 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           onChange={handleLanguagesChange}
           error={errors.languages}
         />
-        
+
         <div className="w-full">
-          <label htmlFor="aboutMe" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="aboutMe"
+            className="block text-sm font-medium text-gray-700"
+          >
             About Me
           </label>
           <textarea
@@ -528,16 +502,8 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ initialValues, onSu
           />
         </div>
       </div>
-      
-      <button
-        type="button"
-        className="px-6 py-2 bg-[#D40000] text-white rounded-md hover:bg-[#b30000] transition-colors"
-        onClick={handleSubmit}
-      >
-        Save & Continue
-      </button>
     </div>
-  );
-};
+  )
+}
 
-export default PersonalInfoForm;
+export default PersonalInfoForm

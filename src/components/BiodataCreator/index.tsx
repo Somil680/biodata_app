@@ -40,33 +40,6 @@ const BiodataCreatorInner: React.FC = () => {
     setCurrentStep(step)
   }
 
-  // const fillAllFormsWithSampleData = () => {
-  //   if (dispatch) {
-  //     // Update all data sections with sample data
-  //     dispatch({
-  //       type: BiodataActionTypes.UPDATE_PERSONAL_INFO,
-  //       payload: sampleBiodata.personalInformation
-  //     });
-
-  //     dispatch({
-  //       type: BiodataActionTypes.UPDATE_FAMILY_INFO,
-  //       payload: sampleBiodata.familyInformation
-  //     });
-
-  //     dispatch({
-  //       type: BiodataActionTypes.UPDATE_CONTACT_INFO,
-  //       payload: sampleBiodata.contactInformation
-  //     });
-
-  //     dispatch({
-  //       type: BiodataActionTypes.UPDATE_SETTINGS,
-  //       payload: sampleBiodata.settings
-  //     });
-
-  //     alert('All forms have been populated with sample data!');
-  //   }
-  // };
-
   const steps = [
     {
       id: BiodataFormStep.PERSONAL_INFO,
@@ -164,36 +137,36 @@ const BiodataCreatorInner: React.FC = () => {
   const renderStep = () => {
     switch (currentStep) {
       case BiodataFormStep.PERSONAL_INFO:
-        return <PersonalInfoForm onNext={goToNextStep} />
+        return <PersonalInfoForm  />
       case BiodataFormStep.FAMILY_INFO:
-        return <FamilyInfoForm onNext={goToNextStep} />
+        return <FamilyInfoForm  />
       case BiodataFormStep.CONTACT_INFO:
-        return <ContactInfoForm onNext={goToNextStep} />
+        return <ContactInfoForm  />
       case BiodataFormStep.SETTINGS:
         return <SettingsForm onNext={goToNextStep} />
       case BiodataFormStep.PREVIEW:
         // When preview step is reached, push to /preview route
         // router.push('/preview');
-        return <PreviewSection />;
+        return <PreviewSection />
       default:
         return null
     }
   }
 
   return (
-    <div className="max-w-5xl mx-auto  py-8">
+    <div className="max-w-5xl mx-auto  sm:py-8">
       {/* Step Progress */}
       <div className="mb-8">
         <div className="flex items-center md:justify-between">
           {steps.map((step, index) => (
             <React.Fragment key={step.id}>
               <div
-                className={`flex-shrink-0 ${
+                className={`flex-shrink-0  ${
                   currentStep >= step.id ? 'text-[#D40000]' : 'text-gray-400'
                 }`}
               >
                 <div
-                  className={`flex flex-col items-center justify-center cursor-pointer ${
+                  className={`flex flex-col  items-center justify-center cursor-pointer ${
                     currentStep >= step.id ? 'hover:opacity-80' : 'opacity-50'
                   }`}
                   onClick={() => {
@@ -232,9 +205,9 @@ const BiodataCreatorInner: React.FC = () => {
                 </div>
               </div>
               {index < steps.length - 1 && (
-                <div className="flex-grow mx-1 md:mx-2">
+                <div className="flex-grow mx-1 md:mx-2 ">
                   <div
-                    className={`h-1 ${
+                    className={`h-1  ${
                       currentStep > index ? 'bg-[#D40000]' : 'bg-gray-200'
                     }`}
                   />
@@ -252,7 +225,7 @@ const BiodataCreatorInner: React.FC = () => {
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -10 }}
         transition={{ duration: 0.3 }}
-        className="bg-white p-6 rounded-lg shadow-md"
+        className=""
       >
         {renderStep()}
       </motion.div>
@@ -278,7 +251,7 @@ const BiodataCreatorInner: React.FC = () => {
             onClick={goToNextStep}
             className="px-4 py-2 bg-[#D40000] text-white rounded hover:bg-[#b30000] flex items-center"
           >
-            Next
+            Save & Next
             <ChevronsRight className="ml-1 w-4 h-4" />
           </button>
         </div>

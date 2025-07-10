@@ -81,7 +81,7 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           {/* Ganesh Icon */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -98,17 +98,17 @@ const HeroSection = () => {
               <path d="M40 30C35 25 25 30 20 25" stroke="#FF8C00" strokeWidth="3" />
               <path d="M60 30C65 25 75 30 80 25" stroke="#FF8C00" strokeWidth="3" />
 </svg>
-          </motion.div>
+          </motion.div> */}
           
           {/* Blessing text */}
-          <motion.p
+          {/* <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
             className="text-lg text-orange-600 font-medium mb-6"
           >
             ॐ गणेशाय नमः
-          </motion.p>
+          </motion.p> */}
           
           {/* Headline */}
           <motion.h1

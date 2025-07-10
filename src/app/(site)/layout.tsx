@@ -2,7 +2,6 @@
 
 import Navbar from '@/components/Homepage/Navbar'
 import Footer from '@/components/Homepage/Footer'
-import PreviewModal from '@/components/Model/PreviewModal'
 
 export default function SiteLayout({
   children,
@@ -19,7 +18,6 @@ export default function SiteLayout({
       <Navbar />
       <main className="flex-1">
           {children}
-      <PreviewModal />
       </main>
       <Footer />
     </div>
