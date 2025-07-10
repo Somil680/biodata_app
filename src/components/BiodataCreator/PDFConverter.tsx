@@ -114,7 +114,7 @@ const A4PDFPreview: React.FC<A4PDFPreviewProps> = ({
                   style={{
                     width: `${PAGE_WIDTH}px`,
                     height: `${PAGE_HEIGHT}px`,
-                    // transform: `scale(${0.5})`,
+                    transform: `scale(${scale})`,
                     transformOrigin: 'top center',
                   }}
                 >

@@ -15,7 +15,6 @@ const shouldDisplay = (value: unknown): boolean => {
 
 // The main Template component for PDF
 const Template1PDF = ({
-  heading_font_size , content_font_size
 }) => {
   const { biodata } = useBiodata()
 
